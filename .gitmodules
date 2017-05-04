@@ -1,0 +1,6 @@
+[submodule "bmptk"]
+	path = bmptk
+	url = git@github.com:wovo/bmptk.git
+[submodule "hwlib"]
+	path = hwlib
+	url = git@github.com:wovo/hwlib.git
