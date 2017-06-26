@@ -30,7 +30,7 @@ SOURCES           += rtos.cpp
 DEFINES           += -DPlAYER=2
 DEFINES           += -DLEADER=1
 DEFINES           += -DGAMEMODE=LEADER
-OS := $(shell uname)
+OS ?= $(shell uname)
 
 player:
 	export DEFINES=DEFINES-DGAMEMODE=PLAYER
