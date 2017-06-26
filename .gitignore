@@ -1,5 +1,9 @@
 # Created by https://www.gitignore.io/api/c,vim,c++,joe,cmake,clion,emacs,xcode,anjuta,appcode,eclipse,netbeans,jetbrains,notepadpp,slickedit,codeblocks,sublimetext,visualstudio,visualstudiocode
 
+libs/bmptk/examples/
+libs/hwlib/images/
+
+
 ### Anjuta ###
 # Local configuration folder and symbol database
 /.anjuta/
@@ -81,6 +85,8 @@ fabric.properties
 *.ilk
 *.map
 *.exp
+*.bin
+*.ld
 
 # Precompiled Headers
 *.gch
