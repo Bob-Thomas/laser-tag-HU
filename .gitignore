@@ -2,7 +2,7 @@
 
 libs/bmptk/examples/
 libs/hwlib/images/
-
+libs/bmptk/Makefile.custom
 
 ### Anjuta ###
 # Local configuration folder and symbol database
