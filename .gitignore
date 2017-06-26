@@ -1,7 +1,7 @@
 libs/hwlib/images
 libs/bmptk/examples
-*.o
-*.bin
-*.elf
-*.map
-*.ld
+**.o
+**.bin
+**.elf
+**.map
+**.ld
