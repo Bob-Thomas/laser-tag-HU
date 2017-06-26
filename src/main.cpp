@@ -1,4 +1,4 @@
-#include "hwlib.hpp"
+#include "wrap-hwlib.hh"
 #include "rtos.hpp"
 
 class dave : public rtos::task<> {

@@ -76,17 +76,17 @@ fabric.properties
 *.d
 
 # Object files
-*.o
-*.ko
-*.obj
-*.elf
+**.o
+**.ko
+**.obj
+**.elf
 
 # Linker output
-*.ilk
-*.map
-*.exp
-*.bin
-*.ld
+**.ilk
+**.map
+**.exp
+**.bin
+**.ld
 
 # Precompiled Headers
 *.gch

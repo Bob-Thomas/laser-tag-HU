@@ -1,3 +1,6 @@
-// Include hwlib """"header only"""" code.
-#define HWLIB_ONCE
-#include "wrap-hwlib.hh"
+#pragma once
+
+// Wrap hwlib to silence warnings.
+
+#pragma GCC system_header // Hush...
+#include <hwlib.hpp>
