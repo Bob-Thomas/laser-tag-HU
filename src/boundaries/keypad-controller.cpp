@@ -1,15 +1,15 @@
 #include "keypad-controller.hpp"
 
-KeypadController::KeyPadController(hwlib::keypad<16> &keypad, IController *controller) :
-                                        keypad(keypad), controller(controller) {
+KeypadController::KeypadController(hwlib::keypad<16> &keypad, IController *controller) :
+                                       task("keypad task"), keypad(keypad), controller(controller) {
 
 }
 
 void KeypadController::main() {
     for(;;) {
-        rtos::sleep(pollTime);
+        sleep(pollTime);
         if(keypad.char_available()) {
-            controller->send_key(keypad.getc());
+            controller->keypad_pressed(keypad.getc());
         }
     }
 }

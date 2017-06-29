@@ -14,5 +14,6 @@ class IController {
 public:
     ///Pure virtual function that inherited classes can overide
     virtual void button_pressed() = 0;
+    virtual void keypad_pressed(char c) = 0;
 };
 #endif //I_CONTROLLER_HPP

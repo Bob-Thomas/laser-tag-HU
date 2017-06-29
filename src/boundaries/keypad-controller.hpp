@@ -1,12 +1,14 @@
-#ifdef KEYPAD_CONTROLLER_HPP
+#ifndef KEYPAD_CONTROLLER_HPP
 #define KEYPAD_CONTROLLER_HPP
 #include "rtos.hpp"
 #include "hwlib.hpp"
 #include "../interfaces/i-controller.hpp"
-class IController;
-class KeyPadController : public rtos::task<> {
+
+class KeypadController : public rtos::task<> {
 private:
-    static constexpr pollTime = 200*rtos::ms;
+    static constexpr int pollTime = 200*rtos::ms;
+    hwlib::keypad<16> &keypad;
+    IController *controller = nullptr;
     void main();
 public:
     KeypadController(hwlib::keypad<16> &keypad, IController *controller);

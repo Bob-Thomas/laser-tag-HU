@@ -17,8 +17,7 @@ HEAP              ?= BMPTK
 
 PROJECT 	  	  ?= src/main
 
-HEADERS           += src/boundaries/keypad-controller.hpp
-SOURCES           +=  src/boundaries/keypad-controller.hpp
+
 # use hwlib
 SEARCH            += ./libs/hwlib
 SOURCES           += hwlib.cpp
@@ -27,7 +26,10 @@ SOURCES           += hwlib.cpp
 HEADERS           += src/boundaries/button_controller.hpp
 SOURCES           += src/boundaries/button_controller.cpp
 
-## Boundaries
+HEADERS           +=  src/boundaries/keypad-controller.hpp
+SOURCES           +=  src/boundaries/keypad-controller.cpp
+
+## Interfaces
 HEADERS           += src/interfaces/i-controller.hpp
 
 # use the rtos
