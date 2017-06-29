@@ -1,5 +1,7 @@
 #include "wrap-hwlib.hh"
 #include "rtos.hpp"
+#include "stateController/init-game-controller.hpp"
+#include "boundaries/ir-receive-controller.hpp"
 
 class dave : public rtos::task<> {
     public:
@@ -18,8 +20,11 @@ class dave : public rtos::task<> {
 };
 int main() {
     WDT->WDT_MR = WDT_MR_WDDIS;
-    auto p = hwlib::target::pin_out(hwlib::target::pins::d13);
-    auto test = dave(p);
+    auto irPin = hwlib::target::pin_in(hwlib::target::pins::d22);
+    InitGameController initGame;
+    IrReceiveController irReceiveController(irPin);
+    irReceiveController.addListener(&initGame);
+    hwlib::wait_ms(1000);
     rtos::run();
- return 0;
+    return 0;
 }

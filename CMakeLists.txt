@@ -11,4 +11,12 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/libs/rtos")
 #
 add_executable(lightboard
         src/wrap-hwlib.cc
-        src/main.cpp)
+        src/main.cpp
+        src/boundaries/ir-receive-controller.cpp
+        src/boundaries/ir-receive-controller.hpp
+        src/applicationLogic/command.cpp
+        src/applicationLogic/command.hpp
+        src/stateController/controller.hpp
+        src/stateController/init-game-controller.cpp
+        src/stateController/init-game-controller.hpp
+        )
