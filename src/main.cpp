@@ -6,10 +6,10 @@ class dave : public rtos::task<> {
 private:
     hwlib::target::d2_36kHz& p;
     IrController ir;
-    uint16_t bits = 0b1010100011101011;
+    uint16_t bits = 0b1010101010101010;
     void main() {
         while(1){
-            ir.send(bits);
+           ir.send(bits);
         }
     }
 public:
