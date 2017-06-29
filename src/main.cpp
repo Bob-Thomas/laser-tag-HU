@@ -2,17 +2,20 @@
 #include "rtos.hpp"
 #include "./boundaries/button_controller.hpp"
 #include "./boundaries/keypad-controller.hpp"
+#include "./boundaries/sound-controller.hpp"
 #include "./interfaces/i-controller.hpp"
 
 class TestController :  public IController, public rtos::task<> {
 private:
     rtos::flag shoot;
     rtos::channel<char, 1> keypadChannel;
+    SoundController &sound;
     void main() {
         for(;;) {
             auto w = wait(shoot + keypadChannel);
             if(w == shoot) {
                 hwlib::cout << "Pew\n";
+                sound.play_shoot();
             }
             if(w == keypadChannel) {
                 hwlib::cout << keypadChannel.read() << "\n";
@@ -20,7 +23,7 @@ private:
         }
     }
 public:
-    TestController() : task("test task"), shoot(this, "shoot"), keypadChannel(this, "keyChannel") {}
+    TestController(SoundController &sound) : task("test task"), shoot(this, "shoot"), keypadChannel(this, "keyChannel"), sound(sound) {}
     void button_pressed() {
         shoot.set();
     }
@@ -48,8 +51,10 @@ int main() {
 	auto matrix = hwlib::matrix_of_switches( outPort, inPort );
 	auto keypad = hwlib::keypad< 16 >( matrix, "123A456B789C*0#D" );
 
+    auto lsp = hwlib::target::pin_out(hwlib::target::pins::d8);
+    auto sound_controller = SoundController(lsp);
     auto controller_pin = hwlib::target::pin_in(hwlib::target::pins::d7);
-    auto controller = TestController();
+    auto controller = TestController(sound_controller);
     auto keypadController = KeypadController(keypad, &controller);
     auto button_controller = ButtonController(controller_pin, &controller);
     rtos::run();

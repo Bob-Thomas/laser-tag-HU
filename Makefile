@@ -29,6 +29,9 @@ SOURCES           += src/boundaries/button_controller.cpp
 HEADERS           +=  src/boundaries/keypad-controller.hpp
 SOURCES           +=  src/boundaries/keypad-controller.cpp
 
+HEADERS           +=  src/boundaries/sound-controller.hpp
+SOURCES           +=  src/boundaries/sound-controller.cpp
+
 ## Interfaces
 HEADERS           += src/interfaces/i-controller.hpp
 
