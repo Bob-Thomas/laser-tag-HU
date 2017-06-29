@@ -20,6 +20,14 @@ PROJECT 	  	  ?= src/main
 # use hwlib
 SEARCH            += ./libs/hwlib
 SOURCES           += hwlib.cpp
+
+## Boundaries
+HEADERS           += src/boundaries/button_controller.hpp
+SOURCES           += src/boundaries/button_controller.cpp
+
+## Boundaries
+HEADERS           += src/interfaces/i-controller.hpp
+
 # use the rtos
 SEARCH            += ./libs/rtos
 HEADERS           += coroutine.hpp switch_to.hpp

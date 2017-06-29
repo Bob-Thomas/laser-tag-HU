@@ -733,3 +733,6 @@ __pycache__/
 *.xsd.cs
 
 # End of https://www.gitignore.io/api/c,vim,c++,joe,cmake,clion,emacs,xcode,anjuta,appcode,eclipse,netbeans,jetbrains,notepadpp,slickedit,codeblocks,sublimetext,visualstudio,visualstudiocode
+
+
+bmptk_fixed_size_stack.c
