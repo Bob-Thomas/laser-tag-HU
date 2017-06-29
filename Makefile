@@ -10,12 +10,17 @@
 
 # settings for Arduino Due projects
 TARGET            ?= arduino_due
-SERIAL_PORT       ?= COM3
+SERIAL_PORT       ?= COM2
 CONSOLE_BAUDRATE  ?= 38400
 STACK_SIZE        ?= 81920
 HEAP              ?= BMPTK
 
 PROJECT 	  	  ?= src/main
+
+# use src files
+SEARCH            += ./src/boundaries
+HEADERS           += ir-controller.hpp
+SOURCES           += ir-controller.cpp
 
 # use hwlib
 SEARCH            += ./libs/hwlib

@@ -11,4 +11,5 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/libs/rtos")
 #
 add_executable(lightboard
         src/wrap-hwlib.cc
-        src/main.cpp)
+        src/main.cpp
+        src/boundaries/ir-controller.cpp)
