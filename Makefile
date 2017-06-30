@@ -36,6 +36,15 @@ SOURCES           +=  src/boundaries/keypad-controller.cpp
 HEADERS           +=  src/boundaries/sound-controller.hpp
 SOURCES           +=  src/boundaries/sound-controller.cpp
 
+## Entities
+HEADERS 		  += src/entities/game-data.hpp
+SOURCES 		  += src/entities/game-data.cpp
+
+## States
+HEADERS           +=  src/Statecontroller/player-task.hpp
+SOURCES           +=  src/Statecontroller/player-task.cpp
+
+
 ## Interfaces
 HEADERS           += src/interfaces/i-controller.hpp
 
