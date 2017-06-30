@@ -16,7 +16,7 @@ private:
     short firstReceivedByte = 0;
     short receivedByte = 0;
     int bitIndex = 0;
-    const int pullTimeUs = 4;
+    const int pullTimeUs = 100;
     const int msBetweenSignal = 3;
     bool isSecondListen = false;
     hwlib::target::pin_in &ir;
