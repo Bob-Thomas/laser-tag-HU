@@ -26,34 +26,33 @@ void IrReceiveController::main() {
                 continue; // no signal, start over again..
             }
         }
-        bool bits[16];
-        int j = 0;
-        while(j < 16) {
-            on = 0;
-            off = 0;
-            for (int i = 0; i < 23; i++) {
-                // Add time to the state of the IR.
-                !ir.get() ? on += pullTimeUs : off += pullTimeUs;
-                hwlib::wait_us(pullTimeUs);
-            }
 
+        if(bitNumber >= 15){
+            for(int i = 0; i < 16; i++) {
+                hwlib::cout << bits[i] << " ";
+            }
+            hwlib::cout << "\n===\n";
+            bitNumber = 0;
+            foundSignal = false;
+        }
+
+        if(on + off < 21*pullTimeUs){
+            !ir.get() ? on += pullTimeUs : off += pullTimeUs;
+        }else{
             if (on > off) {
                 // one bit
-                bits[j] = true;
-                j++;
+                bits[bitNumber] = true;
             } else {
                 // zero bit
-                if(j > 0) {
-                    bits[j] = false;
-                    j++;
+                if(bitNumber > 0) {
+                    bits[bitNumber] = false;
                 }
             }
+            on = 0;
+            off = 0;
+            bitNumber++;
         }
 
-        foundSignal = false;
-        for(int i = 0; i < 16; i++) {
-            hwlib::cout << bits[i] << " ";
-        }
-        hwlib::cout << "\n===\n";
+        hwlib::wait_us(pullTimeUs);
     }
 }

@@ -13,6 +13,8 @@ class IrReceiveController : public rtos::task<> {
 private:
     int on = 0;
     int off = 0;
+    bool bits[16];
+    int bitNumber = 0;
     short firstReceivedByte = 0;
     short receivedByte = 0;
     int bitIndex = 0;

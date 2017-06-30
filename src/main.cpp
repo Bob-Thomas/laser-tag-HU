@@ -21,9 +21,9 @@ class dave : public rtos::task<> {
 int main() {
     WDT->WDT_MR = WDT_MR_WDDIS;
     auto irPin = hwlib::target::pin_in(hwlib::target::pins::d22);
-    InitGameController initGame;
+    //InitGameController initGame;
     IrReceiveController irReceiveController(irPin);
-    irReceiveController.addListener(&initGame);
+    //irReceiveController.addListener(&initGame);
     hwlib::wait_ms(1000);
     rtos::run();
     return 0;
