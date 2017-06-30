@@ -49,6 +49,7 @@ void IrReceiveController::main() {
                 }
             }
         }
+
         foundSignal = false;
         for(int i = 0; i < 16; i++) {
             hwlib::cout << bits[i] << " ";
