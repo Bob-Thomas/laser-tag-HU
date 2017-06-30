@@ -18,8 +18,6 @@ void IrController::sendBit(bool b){
 
 void IrController::send(uint16_t bits){
     for(int i = 0; i < 16; ++i){
-        sendBit(((bits & (1 << i))& (1 << i)) > 0);
-        hwlib::cout << (((bits & (1 << i))& (1 << i)) > 0) << " ";
+        sendBit(((bits & (1 << i))& (1 << i)) < 1);
     }
-    hwlib::cout << "\n";
 }
