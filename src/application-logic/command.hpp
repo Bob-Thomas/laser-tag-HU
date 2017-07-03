@@ -14,20 +14,6 @@
 class Command {
 private:
     /**
-     * \brief returns a int combined from 5 bits msb skipping the first
-     * This represents the id in our ir protocol
-     */
-    static constexpr int get_id(uint16_t data) {
-        return (int) ((data & 0b0111110000000000) >> 10);
-    }
-    /**
-     * \brief returns a int combined from 10 bits msb skipping the first
-     * This represents the data in our ir protocol
-     */
-    static constexpr int get_data(uint16_t data) {
-        return (int) ((data & 0b0000001111100000) >> 5);
-    }
-    /**
      * \brief returns a bool by checking the checksum
      * The checksum is a XOR of the id and data
      */
@@ -70,6 +56,21 @@ public:
      * \param[in] data The data you want to send
      */
     Command(int id, int data);
+
+    /**
+     * \brief returns a int combined from 5 bits msb skipping the first
+     * This represents the id in our ir protocol
+     */
+    static constexpr int get_id(uint16_t data) {
+        return (int) ((data & 0b0111110000000000) >> 10);
+    }
+    /**
+     * \brief returns a int combined from 10 bits msb skipping the first
+     * This represents the data in our ir protocol
+     */
+    static constexpr int get_data(uint16_t data) {
+        return (int) ((data & 0b0000001111100000) >> 5);
+    }
 
     /**
      * \brief returns the id

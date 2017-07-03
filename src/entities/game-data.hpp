@@ -15,22 +15,24 @@ private:
 public:
     GameData();
 
-    void set_player(int id);
+    GameData(int playerId, int weaponId);
 
-    int get_player();
+    void setPlayer(int id);
 
-    void set_weapon(int id);
+    int getPlayer();
 
-    int get_weapon();
+    void setWeapon(int id);
 
-    void set_time(int time);
+    int getWeapon();
 
-    int get_time();
+    void setTime(int time);
 
-    void set_health(int hp);
+    int getTime();
 
-    int get_health();
+    void setHealth(int hp);
 
-    
+    int getHealth();
+
+
 };
 #endif

@@ -55,6 +55,9 @@ SOURCES 		  += src/entities/game-data.cpp
 HEADERS           +=  src/Statecontroller/player-task.hpp
 SOURCES           +=  src/Statecontroller/player-task.cpp
 
+HEADERS           +=  src/Statecontroller/master-task.hpp
+SOURCES           +=  src/Statecontroller/master-task.cpp
+
 
 ## Interfaces
 HEADERS           += src/interfaces/i-controller.hpp
@@ -72,13 +75,13 @@ DEFINES           += -DGAMEMODE=LEADER
 OS ?= $(shell uname)
 
 player:
-	export DEFINES=DEFINES-DGAMEMODE=PLAYER
+	set DEFINES=DEFINES-DGAMEMODE=PLAYER
 
 leader:
-	export DEFINES=DEFINES-DGAMEMODE=LEADER
+	set DEFINES=DEFINES-DGAMEMODE=LEADER
 
-playerRun: player runAvr
-leaderRun: leader runAvr
+playerRun: player run
+leaderRun: leader run
 
 # set BMPTK to the bmptk subdirectory
 BMPTK := $(BMPTK)./libs/bmptk/

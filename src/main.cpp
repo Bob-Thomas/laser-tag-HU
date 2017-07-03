@@ -6,6 +6,7 @@
 #include "./boundaries/sound-controller.hpp"
 #include "./interfaces/i-controller.hpp"
 #include "./stateController/player-task.hpp"
+#include "./stateController/master-task.hpp"
 
 int main() {
     WDT->WDT_MR = WDT_MR_WDDIS;
@@ -40,13 +41,19 @@ int main() {
     auto lsp = hwlib::target::pin_out(hwlib::target::pins::d8);
     auto irPin = hwlib::target::pin_in(hwlib::target::pins::d43);
 	auto keypad = hwlib::keypad< 16 >( matrix, "123A456B789C*0#D" );
+    auto irTransmitterPin = hwlib::target::d2_36kHz();
 
     auto sound_controller = SoundController(lsp);
     auto display_controller = DisplayController(oled);
-    auto playerTask = PlayerTask(sound_controller, display_controller);
-    auto irReceivedController = IrReceiveController(irPin, &playerTask);
-    auto keypadController = KeypadController(keypad, &playerTask);
-    auto button_controller = ButtonController(button_pin, &playerTask);
+    auto irTransmitter = IrController(irTransmitterPin);
+    #if GAMEMODE == PLAYER
+    auto gameTask = PlayerTask(sound_controller, display_controller, irTransmitter);
+    #elif GAMEMODE == LEADER
+    auto gameTask = MasterTask(display_controller, irTransmitter);
+    auto keypadController = KeypadController(keypad, &gameTask);
+    #endif
+    auto irReceivedController = IrReceiveController(irPin, &gameTask);
+    auto button_controller = ButtonController(button_pin, &gameTask);
     rtos::run();
     return 0;
 }
