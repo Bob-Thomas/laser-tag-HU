@@ -73,12 +73,13 @@ void PlayerTask::start() {
         if(event == shoot) {
             hwlib::cout << "pew\n";
             sound.play_shoot();
+            data.increaseShotsFired();
         }
         else if(event == received) {
             hwlib::cout << "received command\n";
             Command c = received.read();
             if(c.get_id() != 0 && c.get_id() != data.get_player()) {
-
+                data.insertHitBy(c.get_id(), c.get_data());
             }
         }
         else if(event == gameTimer) {
@@ -96,6 +97,19 @@ void PlayerTask::start() {
                     txt[43] = ' ';
                 }
                 display.displayText(txt);
+
+                // print the hit by information in console
+                hwlib::cout << "Hit by information: \n";
+                if(data.getReceivedHits() == 0) {
+                    hwlib::cout << "No hit information";
+                } else {
+                    for(int i = 0; i < data.getReceivedHits(); i++) {
+                        hwlib::cout << "player id " << data.getHitByArrFromIndex(i).playerId << " with weapon " <<
+                        data.getHitByArrFromIndex(i).WeaponId << "\n";
+                    }
+                }
+                // print amount of shots fired
+                hwlib::cout << "amount of shots fired by you : " << data.getShotsFired();
             } else {
                 updateDisplay(true);
             }
