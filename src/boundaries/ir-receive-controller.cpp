@@ -4,55 +4,53 @@
 
 #include "ir-receive-controller.hpp"
 
-IrReceiveController::IrReceiveController(hwlib::target::pin_in &ir): task("Receive"), ir(ir) {
-
-}
-
-void IrReceiveController::addListener(Controller *c) {
-    if(amountListeners < 3) {
-        controllers[amountListeners] = c;
-        amountListeners++;
-    }
-}
+IrReceiveController::IrReceiveController(hwlib::target::pin_in &ir):
+        task("Receive"),
+        ir(ir)
+{}
 
 void IrReceiveController::main() {
     for(;;) {
-        // polling for signal
-        signal = ir.get();
-        if(!foundSignal) {
-            if (signal == 0) {
-                foundSignal = true;
-            } else {
-                continue; // no signal, start over again..
-            }
-        }
-
-        if(bitNumber >= 15){
-            for(int i = 0; i < 16; i++) {
-                hwlib::cout << bits[i] << " ";
-            }
-            hwlib::cout << "\n===\n";
-            bitNumber = 0;
-            foundSignal = false;
-        }
-
-        if(on + off < 21*pullTimeUs){
-            !ir.get() ? on += pullTimeUs : off += pullTimeUs;
-        }else{
-            if (on > off) {
-                // one bit
-                bits[bitNumber] = true;
-            } else {
-                // zero bit
-                if(bitNumber > 0) {
-                    bits[bitNumber] = false;
+        if(!ir.get()){
+            auto signal = getByte();
+            auto signal2 = getByte();
+            if(signal == signal2){
+                for(int i = 0; i < 16; i++){
+                    hwlib::cout << (signal >> (15-i)& 1);
                 }
+                hwlib::cout << "\n==\n";
             }
-            on = 0;
-            off = 0;
-            bitNumber++;
         }
-
-        hwlib::wait_us(pullTimeUs);
+        hwlib::wait_us(400);
     }
 }
+
+int16_t IrReceiveController::getBit(long long int start){
+    if(start == 0){
+        start = hwlib::now_us();
+    }
+    if(ir.get()){
+        hwlib::wait_us(100);
+        return (start - hwlib::now_us() >= 4800) ? int16_t(-1) : getBit(start);
+    }
+    hwlib::wait_us(1100);
+    bool b = !ir.get();
+    hwlib::wait_us(700);
+    return b;
+}
+
+int IrReceiveController::getByte(int16_t bitStream, int16_t i){
+    if(i == 16){
+        return bitStream;
+    }
+    auto bit = getBit();
+    if(bit != -1) {
+        bitStream = bitStream | (bit << i);
+        i++;
+        return getByte(bitStream, i);
+    }
+    return -1;
+
+}
+
+

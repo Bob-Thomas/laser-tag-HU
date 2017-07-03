@@ -11,25 +11,12 @@
 
 class IrReceiveController : public rtos::task<> {
 private:
-    int on = 0;
-    int off = 0;
-    bool bits[16];
-    int bitNumber = 0;
-    short firstReceivedByte = 0;
-    short receivedByte = 0;
-    int bitIndex = 0;
-    const int pullTimeUs = 100;
-    const int msBetweenSignal = 3;
-    bool isSecondListen = false;
     hwlib::target::pin_in &ir;
-    Controller *controllers[3];
-    int amountListeners = 0;
-    bool foundSignal = false;
-    bool signal;
 public:
     IrReceiveController(hwlib::target::pin_in &ir);
-    void addListener(Controller *c);
     void main();
+    int16_t getBit(long long int start = 0);
+    int getByte(int16_t bitStream = 0, int16_t i = 0);
 };
 
 
