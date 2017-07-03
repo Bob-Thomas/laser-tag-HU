@@ -23,14 +23,15 @@ void PlayerTask::init() {
     data.setPlayer(c.get_id());
     data.setWeapon(c.get_data());
     display.displayText("player data received");
+    irTransmitter.send(c.get_encoded());
     display.displayText("Waiting for time");
-
     wait(received);
     c = received.read();
     if(c.get_id() == 0) {
         data.setTime(c.get_data());
     }
     display.displayText("game time received");
+    irTransmitter.send(c.get_encoded());
     hwlib::wait_ms(2000);
     char txt[] = "GAMETIME 10\n\nPlayer:  \nWeapon: id\n\nWaiting on start signal";
     if (data.getTime() < 10) {
