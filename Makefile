@@ -10,7 +10,7 @@
 
 # settings for Arduino Due projects
 TARGET            ?= arduino_due
-SERIAL_PORT       ?= COM2
+SERIAL_PORT       ?= COM3
 CONSOLE_BAUDRATE  ?= 38400
 STACK_SIZE        ?= 81920
 HEAP              ?= BMPTK
@@ -19,12 +19,26 @@ PROJECT 	  	  ?= src/main
 
 # use
 SEARCH            += ./src/applicationLogic/ ./src/boundaries ./src/stateController
-HEADERS           += command.hpp ir-receive-controller.hpp init-game-controller.hpp controller.hpp
-SOURCES           += command.cpp ir-receive-controller.cpp init-game-controller.cpp
+HEADERS           += ir-receive-controller.hpp init-game-controller.hpp controller.hpp
+SOURCES           += ir-receive-controller.cpp init-game-controller.cpp
 
 # use hwlib
 SEARCH            += ./libs/hwlib
 SOURCES           += hwlib.cpp
+
+## Boundaries
+HEADERS           += src/boundaries/button_controller.hpp
+SOURCES           += src/boundaries/button_controller.cpp
+
+HEADERS           +=  src/boundaries/keypad-controller.hpp
+SOURCES           +=  src/boundaries/keypad-controller.cpp
+
+HEADERS           +=  src/boundaries/sound-controller.hpp
+SOURCES           +=  src/boundaries/sound-controller.cpp
+
+## Interfaces
+HEADERS           += src/interfaces/i-controller.hpp
+
 # use the rtos
 SEARCH            += ./libs/rtos
 HEADERS           += coroutine.hpp switch_to.hpp
