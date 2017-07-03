@@ -19,4 +19,4 @@ add_executable(lightboard
         src/stateController/controller.hpp
         src/stateController/init-game-controller.cpp
         src/stateController/init-game-controller.hpp
-        )
+        src/boundaries/ir-controller.cpp)

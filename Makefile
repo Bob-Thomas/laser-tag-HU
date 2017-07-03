@@ -21,6 +21,11 @@ PROJECT 	  	  ?= src/main
 HEADERS           += src/boundaries/ir-receive-controller.hpp
 SOURCES           += src/boundaries/ir-receive-controller.cpp
 
+# use src files
+SEARCH            += ./src/boundaries
+HEADERS           += ir-controller.hpp
+SOURCES           += ir-controller.cpp
+
 # use hwlib
 SEARCH            += ./libs/hwlib
 SOURCES           += hwlib.cpp
