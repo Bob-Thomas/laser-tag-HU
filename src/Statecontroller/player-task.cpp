@@ -16,19 +16,15 @@ void PlayerTask::init() {
     Command c;
     display.displayText("Starting game\nPress fire when\nthe game master\nnotifies you");
     wait(shoot);
+
     display.displayText("Waiting to\nreceive player\ndata");
-    hwlib::wait_ms(2000);
-    received.write(Command(1, 1));
     wait(received);
     c = received.read();
-    data.set_player(c.get_id());
+    data.set_player(c.get_id());    
     data.set_weapon(c.get_data());
-
     display.displayText("player data received");
-    hwlib::wait_ms(2000);
-
     display.displayText("Waiting for time");
-    received.write(Command(0, 10));
+    
     wait(received);
     c = received.read();
     if(c.get_id() == 0) {
@@ -59,9 +55,6 @@ void PlayerTask::init() {
         txt[32] = (char) (48 + (data.get_weapon() % 10));
     }
     display.displayText(txt);
-    received.write(Command(0,0));
-    wait(received);
-    hwlib::wait_ms(20000);
     wait(received);
     display.displayText("STARTING GAME in \n\n      5S");
     display.displayText("STARTING GAME in \n\n      4S");
@@ -83,6 +76,10 @@ void PlayerTask::start() {
         }
         else if(event == received) {
             hwlib::cout << "received command\n";
+            Command c = received.read();
+            if(c.get_id() != 0 && c.get_id() != data.get_player()) {
+
+            }
         }
         else if(event == gameTimer) {
             data.set_time(data.get_time()-1);
@@ -148,4 +145,8 @@ void PlayerTask::updateDisplay(bool alive) {
 
 void PlayerTask::button_pressed() {
     shoot.set();
+}
+
+void PlayerTask::command_received(Command c) {
+    received.write(c);
 }

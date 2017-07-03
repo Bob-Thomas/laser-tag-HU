@@ -2,9 +2,10 @@
 
 #include "ir-receive-controller.hpp"
 
-IrReceiveController::IrReceiveController(hwlib::target::pin_in &ir):
+IrReceiveController::IrReceiveController(hwlib::target::pin_in &ir, IController *controller):
         task("Receive"),
-        ir(ir)
+        ir(ir),
+        controller(controller)
 {}
 
 void IrReceiveController::main() {
@@ -14,13 +15,7 @@ void IrReceiveController::main() {
             hwlib::wait_ms(3);
             auto signal2 = getByte();
             if (signal == signal2) {
-                //WHAT TO DO WITH THE SIGNAL.
-
-                //Print signal (Just for debugging)
-                for(int i = 0; i < 16; i++){
-                    hwlib::cout << (signal >> (15-i)& 1);
-                }
-                hwlib::cout << "\n==\n";
+                controller->command_received(Command(signal));
             }
         }
         hwlib::wait_us(400);

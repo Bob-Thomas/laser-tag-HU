@@ -3,12 +3,16 @@
 #define LASER_IRRECEIVECONTROLLER_HPP
 
 #include "./rtos.hpp"
-#include "../applicationLogic/command.hpp"
-#include "../stateController/controller.hpp"
+#include "../application-logic/command.hpp"
+#include "../interfaces/i-controller.hpp"
 
 class IrReceiveController : public rtos::task<> {
 private:
+    /// Pin the ir data output is on
     hwlib::target::pin_in &ir;
+
+    /// Pointer to an existing controller to use the interface functions of
+    IController *controller = nullptr;
 
     /**
      * \brief The main loop.
@@ -50,9 +54,9 @@ public:
      * \brief contructor.
      *
      * \param[in] ir The receiver pin.
-     *
+     * \param[in] controller Pointer to a existing controller to communicate with
      */
-    IrReceiveController(hwlib::target::pin_in &ir);
+    IrReceiveController(hwlib::target::pin_in &ir, IController *controller);
 
 };
 

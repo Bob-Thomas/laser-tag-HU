@@ -6,23 +6,7 @@
 #include "./boundaries/sound-controller.hpp"
 #include "./interfaces/i-controller.hpp"
 #include "./stateController/player-task.hpp"
-class TestController :  public IController, public rtos::task<> {
-private:
-    rtos::flag shoot;
-    rtos::channel<char, 1> keypadChannel;
-    SoundController &sound;
-    void main() {
-        for(;;) {
-            auto w = wait(shoot + keypadChannel);
-            if(w == shoot) {
-                hwlib::cout << "Pew\n";
-                sound.play_shoot();
-            }
-            if(w == keypadChannel) {
-                hwlib::cout << keypadChannel.read() << "\n";
-            }
-        }
-};
+
 int main() {
     WDT->WDT_MR = WDT_MR_WDDIS;
     auto in0  = hwlib::target::pin_in( hwlib::target::pins::a3 );
@@ -39,7 +23,6 @@ int main() {
 	auto outPort = hwlib::port_oc_from_pins( out0, out1, out2, out3 );
 	auto inPort = hwlib::port_in_from_pins( in0, in1, in2, in3 );
 	auto matrix = hwlib::matrix_of_switches( outPort, inPort );
-	auto keypad = hwlib::keypad< 16 >( matrix, "123A456B789C*0#D" );
 
     // oled
     namespace target = hwlib::target;
@@ -50,15 +33,20 @@ int main() {
     pin_gnd.set( 0 );
     auto pin_vcc = target::pin_out( target::pins::d18 );
     pin_vcc.set( 1 );
-    auto oled = hwlib::glcd_oled_buffered( i2c_bus, 0x3c );
 
+    // Bounadires
+    auto oled = hwlib::glcd_oled_buffered( i2c_bus, 0x3c );
+    auto button_pin = hwlib::target::pin_in(hwlib::target::pins::d7);
     auto lsp = hwlib::target::pin_out(hwlib::target::pins::d8);
+    auto irPin = hwlib::target::pin_in(hwlib::target::pins::d22);
+	auto keypad = hwlib::keypad< 16 >( matrix, "123A456B789C*0#D" );
+
     auto sound_controller = SoundController(lsp);
-    auto controller_pin = hwlib::target::pin_in(hwlib::target::pins::d7);
     auto display_controller = DisplayController(oled);
     auto playerTask = PlayerTask(sound_controller, display_controller);
+    auto irReceivedController = IrReceiveController(irPin, &playerTask);
     auto keypadController = KeypadController(keypad, &playerTask);
-    auto button_controller = ButtonController(controller_pin, &playerTask);
+    auto button_controller = ButtonController(button_pin, &playerTask);
     rtos::run();
     return 0;
 }

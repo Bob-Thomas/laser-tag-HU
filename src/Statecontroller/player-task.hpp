@@ -25,6 +25,7 @@ public:
     void end();
 
     void button_pressed();
+    void command_received(Command c);
     void keypad_pressed(char c) {}
 
 };

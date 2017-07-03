@@ -18,9 +18,8 @@ HEAP              ?= BMPTK
 PROJECT 	  	  ?= src/main
 
 # use
-SEARCH            += ./src/applicationLogic/ ./src/boundaries ./src/stateController
-HEADERS           += ir-receive-controller.hpp init-game-controller.hpp controller.hpp
-SOURCES           += ir-receive-controller.cpp init-game-controller.cpp
+HEADERS           += src/boundaries/ir-receive-controller.hpp
+SOURCES           += src/boundaries/ir-receive-controller.cpp
 
 # use hwlib
 SEARCH            += ./libs/hwlib
