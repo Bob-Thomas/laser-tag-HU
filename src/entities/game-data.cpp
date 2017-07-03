@@ -1,3 +1,9 @@
+/**
+ * \file      game-data.cpp
+ * \author    Bob Thomas
+ * \copyright Copyright (c) 2017, Lasertak
+ */
+
 #include "game-data.hpp"
 GameData::GameData()
 {

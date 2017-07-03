@@ -1,3 +1,9 @@
+/**
+ * \file      keypad-controller.hpp
+ * \author    Bob Thomas
+ * \brief     Makes a keypad task to listen to keypad input
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #ifndef KEYPAD_CONTROLLER_HPP
 #define KEYPAD_CONTROLLER_HPP
 #include "rtos.hpp"

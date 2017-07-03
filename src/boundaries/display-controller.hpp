@@ -1,7 +1,9 @@
-//
-// Created by robbie on 8-11-2016.
-//
-
+/**
+ * \file      display-controller.hpp
+ * \author    Robbie Valkenburg
+ * \brief     will be used as communcation controller between oled boundary and other game state controllers
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #ifndef CODE_DISPLAYCONTROLLER_HPP
 #define CODE_DISPLAYCONTROLLER_HPP
 
@@ -9,7 +11,7 @@
 #include "hwlib.hpp"
 
 /**
- * \classDisplayController
+ * \class DisplayController
  * \brief will be used as communcation controller between oled boundary and other game state controllers
  */
 

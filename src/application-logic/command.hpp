@@ -1,3 +1,9 @@
+/**
+ * \file      command.hpp
+ * \author    Bob Thomas
+ * \brief     Class that can be used to decode and encode the ir protocol
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 #include "hwlib.hpp"
@@ -5,7 +11,6 @@
  * \brief command class that can encode and decode our ir protocol
  * testing for bitmask was done at -> http://cpp.sh/4ftmz
  */
-typedef unsigned short uint16_t;
 class Command {
 private:
     static constexpr int get_id(uint16_t data) {

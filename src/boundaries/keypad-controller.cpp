@@ -1,3 +1,8 @@
+/**
+ * \file      keypad-controller.hpp
+ * \author    Bob Thomas
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #include "keypad-controller.hpp"
 
 KeypadController::KeypadController(hwlib::keypad<16> &keypad, IController *controller) :

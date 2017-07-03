@@ -1,6 +1,9 @@
-//
-// Created by endargon on 11/10/16.
-//
+/**
+ * \file      sound-controller.hpp
+ * \author    Bob Thomas
+ * \brief     class that controls the speaker
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 
 #ifndef CODE_SOUNDCONTROLLER_H
 #define CODE_SOUNDCONTROLLER_H

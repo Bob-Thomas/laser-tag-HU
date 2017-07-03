@@ -1,3 +1,9 @@
+/**
+ * \file      game-data.hpp
+ * \author    Bob Thomas
+ * \brief     Class to save and get game data
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #ifndef GAME_DATA_HPP
 #define GAME_DATA_HPP
 class GameData {

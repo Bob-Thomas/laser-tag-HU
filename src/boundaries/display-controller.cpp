@@ -1,6 +1,8 @@
-//
-// Created by robbie on 8-11-2016.
-//
+/**
+ * \file      display-controller.cpp
+ * \author    Robbie Valkenburg
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 
 #include "display-controller.hpp"
 DisplayController::DisplayController(hwlib::glcd_oled_buffered &o): oled(o), buffer( this, "buffer" ), timer_screen(this, "timer screen"), clearFlag(this, "clear screen flag"), flushFlag(this, "set flush flag") {

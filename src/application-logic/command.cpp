@@ -1,3 +1,8 @@
+/**
+ * \file      command.hpp
+ * \author    Bob Thomas
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #include "command.hpp"
 
 Command::Command() : id(0), data(0) {

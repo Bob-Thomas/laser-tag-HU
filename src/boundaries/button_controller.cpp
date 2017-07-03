@@ -1,3 +1,8 @@
+/**
+ * \file      button-controller.hpp
+ * \author    Bob Thomas
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #include "button_controller.hpp"
 
 ButtonController::ButtonController(hwlib::target::pin_in &button, IController* listener) : task("Button controller"),

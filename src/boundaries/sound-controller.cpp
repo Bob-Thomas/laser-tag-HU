@@ -1,6 +1,8 @@
-//
-// Created by endargon on 11/10/16.
-//
+/**
+ * \file      sound-controller.cpp
+ * \author    Bob Thomas
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 
 #include "sound-controller.hpp"
 
