@@ -39,6 +39,10 @@ SOURCES           +=  src/boundaries/sound-controller.cpp
 HEADERS           +=  src/boundaries/display-controller.hpp
 SOURCES           +=  src/boundaries/display-controller.cpp
 
+## Application logic
+HEADERS 		  += src/application-logic/command.hpp
+SOURCES 		  += src/application-logic/command.cpp
+
 ## Entities
 HEADERS 		  += src/entities/game-data.hpp
 SOURCES 		  += src/entities/game-data.cpp

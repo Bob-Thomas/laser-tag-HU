@@ -3,38 +3,38 @@ GameData::GameData()
 {
 }
 
-void GameData::setPlayer(int id)
+void GameData::set_player(int id)
 {
     playerId = id;
 }
 
-int GameData::getPlayer()
+int GameData::get_player()
 {
     return playerId;
 }
 
-void GameData::setWeapon(int id)
+void GameData::set_weapon(int id)
 {
     weaponId = id;
 }
 
-int GameData::getWeapon() {
+int GameData::get_weapon() {
     return weaponId;
 }
 
-void GameData::setTime(int time)
+void GameData::set_time(int time)
 {
     endTime = time;
 }
 
-int GameData::getTime() {
+int GameData::get_time() {
     return endTime;
 }
 
-void GameData::setHealth(int hp) {
+void GameData::set_health(int hp) {
     health =hp ;
 }
 
-int GameData::getHealth() {
+int GameData::get_health() {
     return health;
 }

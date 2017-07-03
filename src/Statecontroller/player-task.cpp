@@ -13,31 +13,55 @@ void PlayerTask::main() {
 }
 
 void PlayerTask::init() {
+    Command c;
     display.displayText("Starting game\nPress fire when\nthe game master\nnotifies you");
     wait(shoot);
     display.displayText("Waiting to\nreceive player\ndata");
     hwlib::wait_ms(2000);
-    received.write('c');
+    received.write(Command(1, 1));
     wait(received);
+    c = received.read();
+    data.set_player(c.get_id());
+    data.set_weapon(c.get_data());
+
     display.displayText("player data received");
-    received.read();
     hwlib::wait_ms(2000);
-    received.write('c');
+
+    display.displayText("Waiting for time");
+    received.write(Command(0, 10));
     wait(received);
+    c = received.read();
+    if(c.get_id() == 0) {
+        data.set_time(c.get_data());
+    }
     display.displayText("game time received");
-    received.read();
     hwlib::wait_ms(2000);
-    received.write('c');
+    char txt[] = "GAMETIME 10\n\nPlayer:  \nWeapon: id\n\nWaiting on start signal";
+    if (data.get_time() < 10) {
+        txt[9] = '0';
+        txt[10] = (char) (48 + data.get_time());
+    } else {
+        txt[9] = (char) (48 + (data.get_time() / 10));
+        txt[10] = (char) (48 + (data.get_time() % 10));
+    }
+    if (data.get_player() < 10) {
+        txt[20] = '0';
+        txt[21] = (char) (48 + data.get_player());
+    } else {
+        txt[20] = (char) (48 + (data.get_player() / 10));
+        txt[21] = (char) (48 + (data.get_player() % 10));
+    }
+    if (data.get_weapon() < 10) {
+        txt[31] = '0';
+        txt[32] = (char) (48 + data.get_weapon());
+    } else {
+        txt[31] = (char) (48 + (data.get_weapon() / 10));
+        txt[32] = (char) (48 + (data.get_weapon() % 10));
+    }
+    display.displayText(txt);
+    received.write(Command(0,0));
     wait(received);
-    display.displayText("time received\n");
-    received.read();
-    hwlib::wait_ms(2000);
-    received.write('c');
-    wait(received);
-    display.displayText("GAMETIME 10\n\nPlayer: name\nWeapon: id\n\nWaiting on start signal ");
-    received.read();
     hwlib::wait_ms(20000);
-    received.write('c');
     wait(received);
     display.displayText("STARTING GAME in \n\n      5S");
     display.displayText("STARTING GAME in \n\n      4S");
@@ -61,16 +85,16 @@ void PlayerTask::start() {
             hwlib::cout << "received command\n";
         }
         else if(event == gameTimer) {
-            data.setTime(data.getTime()-1);
-            if(data.getTime() < 0) {
+            data.set_time(data.get_time()-1);
+            if(data.get_time() < 0) {
                 char txt[] = "\n\n   YOU SURVIVED \n    END SCORE \n\n      100";
-                if(data.getHealth() < 100) {
-                    if (data.getHealth() < 10) {
+                if(data.get_health() < 100) {
+                    if (data.get_health() < 10) {
                         txt[41] = '0';
-                        txt[42] = (char) (48 + data.getHealth());
+                        txt[42] = (char) (48 + data.get_health());
                     } else {
-                        txt[41] = (char) (48 + (data.getHealth() / 10));
-                        txt[42] = (char) (48 + (data.getHealth() % 10));
+                        txt[41] = (char) (48 + (data.get_health() / 10));
+                        txt[42] = (char) (48 + (data.get_health() % 10));
                     }
                     txt[43] = ' ';
                 }
@@ -90,31 +114,31 @@ void PlayerTask::end() {
 void PlayerTask::updateDisplay(bool alive) {
  if(!alive) {
         char txt[] = "\n\n\n   YOU'RE DEAD \n Remaining time \n\n      10";
-        if (data.getTime() < 10) {
+        if (data.get_time() < 10) {
             txt[43] = '0';
-            txt[44] = (char) (48 + data.getTime());
+            txt[44] = (char) (48 + data.get_time());
         } else {
-            txt[43] = (char) (48 + (data.getTime() / 10));
-            txt[44] = (char) (48 + (data.getTime() % 10));
+            txt[43] = (char) (48 + (data.get_time() / 10));
+            txt[44] = (char) (48 + (data.get_time() % 10));
         }
         display.displayText(txt);
     } else {
         char txt[] = "hp: 100\nminutes left: 00";
-        hwlib::cout << data.getTime() << "\n";        
-        if (data.getTime() < 10) {
+        hwlib::cout << data.get_time() << "\n";        
+        if (data.get_time() < 10) {
             txt[22] = '0';
-            txt[23] = (char) (48 + data.getTime());
+            txt[23] = (char) (48 + data.get_time());
         } else {
-            txt[22] = (char) (48 + (data.getTime() / 10));
-            txt[23] = (char) (48 + (data.getTime() % 10));
+            txt[22] = (char) (48 + (data.get_time() / 10));
+            txt[23] = (char) (48 + (data.get_time() % 10));
         }
-        if(data.getHealth() < 100) {
-            if (data.getHealth() < 10) {
+        if(data.get_health() < 100) {
+            if (data.get_health() < 10) {
                 txt[4] = '0';
-                txt[5] = (char) (48 + data.getHealth());
+                txt[5] = (char) (48 + data.get_health());
             } else {
-                txt[4] = (char) (48 + (data.getHealth() / 10));
-                txt[5] = (char) (48 + (data.getHealth() % 10));
+                txt[4] = (char) (48 + (data.get_health() / 10));
+                txt[5] = (char) (48 + (data.get_health() % 10));
             }
             txt[6] = ' ';
         }

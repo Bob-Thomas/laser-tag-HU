@@ -6,16 +6,14 @@
 #include "../boundaries/sound-controller.hpp"
 #include "../boundaries/display-controller.hpp"
 #include "../entities/game-data.hpp"
-class Command {
-
-};
+#include "../application-logic/command.hpp"
 class PlayerTask : public rtos::task<>, public IController {
 private:
     GameData data;
     SoundController &sound;
     DisplayController &display;    
     rtos::flag shoot;
-    rtos::channel<char, 1> received;
+    rtos::channel<Command, 1> received;
     rtos::clock gameTimer;
     void updateDisplay(bool alive);
     void main();

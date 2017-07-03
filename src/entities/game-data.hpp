@@ -9,21 +9,21 @@ private:
 public:
     GameData();
 
-    void setPlayer(int id);
+    void set_player(int id);
 
-    int getPlayer();
+    int get_player();
 
-    void setWeapon(int id);
+    void set_weapon(int id);
 
-    int getWeapon();
+    int get_weapon();
 
-    void setTime(int time);
+    void set_time(int time);
 
-    int getTime();
+    int get_time();
 
-    void setHealth(int hp);
+    void set_health(int hp);
 
-    int getHealth();
+    int get_health();
 
     
 };
