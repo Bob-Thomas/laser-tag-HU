@@ -20,10 +20,10 @@ Command::Command(uint16_t data)  {
 }
 
 void Command::encode() {
-    encoded = (id << 10) + (data << 5) + ((id ^ data));
+    encoded = (1 << 15) + (id << 10) + (data << 5) + ((id ^ data));
 }
 int Command::decode() {
-    if(!is_valid(data)) {
+    if(!is_valid(data) && !((data >> 15) & 1)) {
         return 0;
     } else {
         id = get_id(data);
