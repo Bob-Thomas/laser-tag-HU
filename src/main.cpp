@@ -34,7 +34,7 @@ int main() {
     auto pin_vcc = target::pin_out( target::pins::d18 );
     pin_vcc.set( 1 );
 
-    // Bounadires
+    // Boundaries
     auto oled = hwlib::glcd_oled_buffered( i2c_bus, 0x3c );
     auto button_pin = hwlib::target::pin_in(hwlib::target::pins::d7);
     auto lsp = hwlib::target::pin_out(hwlib::target::pins::d8);
