@@ -38,7 +38,7 @@ int main() {
     auto oled = hwlib::glcd_oled_buffered( i2c_bus, 0x3c );
     auto button_pin = hwlib::target::pin_in(hwlib::target::pins::d7);
     auto lsp = hwlib::target::pin_out(hwlib::target::pins::d8);
-    auto irPin = hwlib::target::pin_in(hwlib::target::pins::d22);
+    auto irPin = hwlib::target::pin_in(hwlib::target::pins::d43);
 	auto keypad = hwlib::keypad< 16 >( matrix, "123A456B789C*0#D" );
 
     auto sound_controller = SoundController(lsp);
