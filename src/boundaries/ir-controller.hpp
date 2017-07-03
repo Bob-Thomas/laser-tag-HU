@@ -33,7 +33,7 @@ public:
     /**
      * \brief Send a bitstream
      *
-     * This function will send a bitstream from an uint16_t.
+     * This function will send a bitstream (2 times) from an uint16_t.
      *
      * \param bits Bitstream that has to be send.
      */
