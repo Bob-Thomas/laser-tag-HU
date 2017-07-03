@@ -1,6 +1,4 @@
-//
-// Created by robbie on 29-6-2017.
-//
+
 
 #include "ir-receive-controller.hpp"
 
@@ -11,10 +9,14 @@ IrReceiveController::IrReceiveController(hwlib::target::pin_in &ir):
 
 void IrReceiveController::main() {
     for(;;) {
-        if(!ir.get()){
+        if(!ir.get()) {
             auto signal = getByte();
+            hwlib::wait_ms(3);
             auto signal2 = getByte();
-            if(signal == signal2){
+            if (signal == signal2) {
+                //WHAT TO DO WITH THE SIGNAL.
+
+                //Print signal (Just for debugging)
                 for(int i = 0; i < 16; i++){
                     hwlib::cout << (signal >> (15-i)& 1);
                 }
@@ -25,13 +27,13 @@ void IrReceiveController::main() {
     }
 }
 
-int16_t IrReceiveController::getBit(long long int start){
+uint8_t IrReceiveController::getBit(long long int start){
     if(start == 0){
         start = hwlib::now_us();
     }
     if(ir.get()){
         hwlib::wait_us(100);
-        return (start - hwlib::now_us() >= 4800) ? int16_t(-1) : getBit(start);
+        return (start - hwlib::now_us() >= 4000) ? uint8_t(2) : getBit(start);
     }
     hwlib::wait_us(1100);
     bool b = !ir.get();
@@ -39,17 +41,16 @@ int16_t IrReceiveController::getBit(long long int start){
     return b;
 }
 
-int IrReceiveController::getByte(int16_t bitStream, int16_t i){
+uint16_t IrReceiveController::getByte(uint16_t bitStream, uint16_t i){
     if(i == 16){
         return bitStream;
     }
     auto bit = getBit();
-    if(bit != -1) {
+    if(bit != 2) {
         bitStream = bitStream | (bit << i);
-        i++;
-        return getByte(bitStream, i);
+        return getByte(bitStream, ++i);
     }
-    return -1;
+    return 2;
 
 }
 
