@@ -1,6 +1,10 @@
-//
-// Created by Rene on 29/06/2017.
-//
+/**
+ * \file        ir-controller.hpp
+ * \brief       This class will send a 16 bit IR-signal.
+ * \author      René de Kluis
+ * \copyright   Copyright (c) 2017, The R2D2 Team
+ * \license     See LICENSE
+ */
 
 #ifndef LASER_IR_H
 #define LASER_IR_H

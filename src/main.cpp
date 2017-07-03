@@ -1,4 +1,12 @@
-#include "wrap-hwlib.hh"
+/**
+ * \file        main.cpp
+ * \brief       This file is the main application of the system.
+ * \author      René de Kluis, Robbie Valkenburg, Bob Thomas
+ * \copyright   Copyright (c) 2017, Lasertak
+ * \license     See LICENSE
+ */
+
+#include "hwlib.hpp"
 #include "rtos.hpp"
 #include "./boundaries/ir-controller.hpp"
 
@@ -24,8 +32,6 @@ public:
 int main() {
     WDT->WDT_MR = WDT_MR_WDDIS;
     auto p = hwlib::target::d2_36kHz();
-    //auto m = hwlib::target::pin_in(hwlib::target::pins::d24);
-    //auto test1 = receive(m);
     auto test2 = dave(p);
     rtos::run();
  return 0;
