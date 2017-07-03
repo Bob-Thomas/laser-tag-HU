@@ -23,11 +23,11 @@ void Command::encode() {
     encoded = (1 << 15) + (id << 10) + (data << 5) + ((id ^ data));
 }
 int Command::decode() {
-    if(!is_valid(data) && !((data >> 15) & 1)) {
+    if(!is_valid(encoded) && !((encoded >> 15) & 1)) {
         return 0;
     } else {
-        id = get_id(data);
-        data = get_data(data);
+        id = get_id(encoded);
+        data = get_data(encoded);
     }
     return 1;
 }

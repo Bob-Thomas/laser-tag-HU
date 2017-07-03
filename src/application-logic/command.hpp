@@ -18,14 +18,14 @@ private:
      * This represents the id in our ir protocol
      */
     static constexpr int get_id(uint16_t data) {
-        return (int) (data & 0b0111110000000000 >> 10);
+        return (int) ((data & 0b0111110000000000) >> 10);
     }
     /**
      * \brief returns a int combined from 10 bits msb skipping the first
      * This represents the data in our ir protocol
      */
     static constexpr int get_data(uint16_t data) {
-        return (int) (data & 0b0000001111100000 >> 5);
+        return (int) ((data & 0b0000001111100000) >> 5);
     }
     /**
      * \brief returns a bool by checking the checksum
