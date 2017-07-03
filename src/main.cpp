@@ -4,7 +4,6 @@
 #include "./boundaries/button_controller.hpp"
 #include "./boundaries/keypad-controller.hpp"
 #include "./boundaries/sound-controller.hpp"
-#include "./interfaces/i-controller.hpp"
 #include "./stateController/player-task.hpp"
 
 int main() {
