@@ -5,7 +5,7 @@ private:
     int playerId = -1;
     int weaponId = -1;
     int health = 100;
-    int endTime = -1;
+    int endTime = 25;
 public:
     GameData();
 

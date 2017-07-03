@@ -1,6 +1,6 @@
 #include "player-task.hpp"
 
-PlayerTask::PlayerTask(SoundController& sound, DisplayController& display): task("Player task"), sound(sound), display(display), shoot(this, "shoot-flag"), received(this, "received channel"), gameTimer(this, 5*rtos::s, "gametimer") {
+PlayerTask::PlayerTask(SoundController& sound, DisplayController& display): task("Player task"), sound(sound), display(display), shoot(this, "shoot-flag"), received(this, "received channel"), gameTimer(this, 60*rtos::s, "gametimer") {
 
 }
 
@@ -13,17 +13,31 @@ void PlayerTask::main() {
 }
 
 void PlayerTask::init() {
-    display.displayText("Starting game\n Press fire when the game master notifies you");
+    display.displayText("Starting game\nPress fire when\nthe game master\nnotifies you");
     wait(shoot);
-    display.displayText("Waiting to receive player data");
+    display.displayText("Waiting to\nreceive player\ndata");
+    hwlib::wait_ms(2000);
+    received.write('c');
     wait(received);
     display.displayText("player data received");
+    received.read();
+    hwlib::wait_ms(2000);
+    received.write('c');
     wait(received);
     display.displayText("game time received");
+    received.read();
+    hwlib::wait_ms(2000);
+    received.write('c');
     wait(received);
     display.displayText("time received\n");
-    sleep(500*rtos::ms);
-    display.displayText("\tGAMETIME 10\nPlayer: name \n Weapon: id\n\n Waiting on start signal ");
+    received.read();
+    hwlib::wait_ms(2000);
+    received.write('c');
+    wait(received);
+    display.displayText("GAMETIME 10\n\nPlayer: name\nWeapon: id\n\nWaiting on start signal ");
+    received.read();
+    hwlib::wait_ms(20000);
+    received.write('c');
     wait(received);
     display.displayText("STARTING GAME in \n\n      5S");
     display.displayText("STARTING GAME in \n\n      4S");
@@ -31,12 +45,14 @@ void PlayerTask::init() {
     display.displayText("STARTING GAME in \n\n      2S");
     display.displayText("STARTING GAME in \n\n      1S");
     display.displayText("STARTING GAME in \n\n      0S");
+    updateDisplay(true);
 }
 
 void PlayerTask::start() {
     gameTimer.clear();
+    rtos::clock test(this, 1*rtos::s, "test tmer");
     for(;;) {
-        auto event = wait(shoot + received + gameTimer);
+        auto event = wait(shoot + received + gameTimer + test);
         if(event == shoot) {
             hwlib::cout << "pew\n";
             sound.play_shoot();
@@ -45,7 +61,7 @@ void PlayerTask::start() {
             hwlib::cout << "received command\n";
         }
         else if(event == gameTimer) {
-            data.setTime(data.getTime()-5);
+            data.setTime(data.getTime()-1);
             if(data.getTime() < 0) {
                 char txt[] = "\n\n   YOU SURVIVED \n    END SCORE \n\n      100";
                 if(data.getHealth() < 100) {
@@ -84,6 +100,7 @@ void PlayerTask::updateDisplay(bool alive) {
         display.displayText(txt);
     } else {
         char txt[] = "hp: 100\nminutes left: 00";
+        hwlib::cout << data.getTime() << "\n";        
         if (data.getTime() < 10) {
             txt[22] = '0';
             txt[23] = (char) (48 + data.getTime());

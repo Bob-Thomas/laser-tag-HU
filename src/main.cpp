@@ -5,19 +5,21 @@
 #include "./boundaries/keypad-controller.hpp"
 #include "./boundaries/sound-controller.hpp"
 #include "./interfaces/i-controller.hpp"
-
-class dave : public rtos::task<> {
-    public:
-        dave(hwlib::target::pin_out& p): task("Main"), p(p){
-        }
-    private:
-        hwlib::target::pin_out& p;
-        void main() {
-            for(;;) {
-                hwlib::wait_ms(200);
-                p.set(0);
-                hwlib::wait_ms(200);
-                p.set(1);
+#include "./stateController/player-task.hpp"
+class TestController :  public IController, public rtos::task<> {
+private:
+    rtos::flag shoot;
+    rtos::channel<char, 1> keypadChannel;
+    SoundController &sound;
+    void main() {
+        for(;;) {
+            auto w = wait(shoot + keypadChannel);
+            if(w == shoot) {
+                hwlib::cout << "Pew\n";
+                sound.play_shoot();
+            }
+            if(w == keypadChannel) {
+                hwlib::cout << keypadChannel.read() << "\n";
             }
         }
 };
@@ -39,15 +41,24 @@ int main() {
 	auto matrix = hwlib::matrix_of_switches( outPort, inPort );
 	auto keypad = hwlib::keypad< 16 >( matrix, "123A456B789C*0#D" );
 
+    // oled
+    namespace target = hwlib::target;
+    auto scl = target::pin_oc( target::pins::scl );
+    auto sda = target::pin_oc( target::pins::sda );
+    auto i2c_bus = hwlib::i2c_bus_bit_banged_scl_sda( sda, scl );
+    auto pin_gnd = target::pin_out( target::pins::d19 );
+    pin_gnd.set( 0 );
+    auto pin_vcc = target::pin_out( target::pins::d18 );
+    pin_vcc.set( 1 );
+    auto oled = hwlib::glcd_oled_buffered( i2c_bus, 0x3c );
+
     auto lsp = hwlib::target::pin_out(hwlib::target::pins::d8);
     auto sound_controller = SoundController(lsp);
     auto controller_pin = hwlib::target::pin_in(hwlib::target::pins::d7);
-    auto controller = TestController(sound_controller);
-    auto keypadController = KeypadController(keypad, &controller);
-    auto button_controller = ButtonController(controller_pin, &controller);
-    auto irPin = hwlib::target::pin_in(hwlib::target::pins::d22);
-    IrReceiveController irReceiveController(irPin);
-    hwlib::wait_ms(100);
+    auto display_controller = DisplayController(oled);
+    auto playerTask = PlayerTask(sound_controller, display_controller);
+    auto keypadController = KeypadController(keypad, &playerTask);
+    auto button_controller = ButtonController(controller_pin, &playerTask);
     rtos::run();
     return 0;
 }

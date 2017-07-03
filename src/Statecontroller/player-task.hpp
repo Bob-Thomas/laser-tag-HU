@@ -15,7 +15,7 @@ private:
     SoundController &sound;
     DisplayController &display;    
     rtos::flag shoot;
-    rtos::channel<Command, 1> received;
+    rtos::channel<char, 1> received;
     rtos::clock gameTimer;
     void updateDisplay(bool alive);
     void main();
@@ -27,6 +27,7 @@ public:
     void end();
 
     void button_pressed();
+    void keypad_pressed(char c) {}
 
 };
 #endif // PLAYER_TASK_HPP
