@@ -18,7 +18,7 @@ private:
      * The checksum is a XOR of the id and data
      */
     static constexpr bool is_valid(uint16_t data) {
-        return (bool) ((get_id(data) ^ get_data(data)) == (data & 0b0000000000011111));
+        return (bool) ((get_id_from_byte(data) ^ get_data_from_byte(data)) == (data & 0b0000000000011111));
     }
     /// id of the sender
     int id = 0;
@@ -61,14 +61,14 @@ public:
      * \brief returns a int combined from 5 bits msb skipping the first
      * This represents the id in our ir protocol
      */
-    static constexpr int get_id(uint16_t data) {
+    static constexpr int get_id_from_byte(uint16_t data) {
         return (int) ((data & 0b0111110000000000) >> 10);
     }
     /**
      * \brief returns a int combined from 10 bits msb skipping the first
      * This represents the data in our ir protocol
      */
-    static constexpr int get_data(uint16_t data) {
+    static constexpr int get_data_from_byte(uint16_t data) {
         return (int) ((data & 0b0000001111100000) >> 5);
     }
 
