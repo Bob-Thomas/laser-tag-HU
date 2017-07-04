@@ -21,10 +21,10 @@ private:
      * oled boundary reference
      */
     hwlib::glcd_oled_buffered &oled;
-    /**
-     * RTOS buffer for storing the char to write to oled display
-     */
-    rtos::channel< char, 2048 > buffer;
+    hwlib::window_ostream stream;
+    hwlib::font_default_8x8 font;
+
+    char *oledText;
 
     /**
      * RTOS timer for updating screen
@@ -51,12 +51,23 @@ public:
      * DisplayController Constructor
      * /param hwlib::glc_oled_buffered &c  will be the oled boundary object for writing on screen
      */
-    DisplayController(hwlib::glcd_oled_buffered &o);
+    DisplayController(hwlib::glcd_oled_buffered &oled );
 
     /**
      * interface function to write string on screen
      */
-    void displayText(const char *);
+
+
+    hwlib::glcd_oled_buffered getOled();
+    hwlib::font_default_8x8 getFont();
+    hwlib::window_ostream &getWindowOstream();
+
+    void flush();
+
+    void setDisplayText(const char * text);
+    void setFlushFlag();
+
+
 };
 
 
