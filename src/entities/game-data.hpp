@@ -26,17 +26,17 @@ private:
 public:
     GameData();
 
-    void set_player(int id);
-    int get_player();
+    void setPlayerId(int id);
+    int getPlayerId() const;
 
-    void set_weapon(int id);
-    int get_weapon();
+    void setWeaponId(int id);
+    int getWeaponId() const;
 
-    void set_time(int time);
-    int get_time();
+    void setTime(int time);
+    int getTime() const;
 
-    void set_health(int hp);
-    int get_health();
+    void setHealth(int hp);
+    int getHealth() const;
 
     int getShotsFired() const;
     void increaseShotsFired();

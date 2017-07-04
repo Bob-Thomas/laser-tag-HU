@@ -20,39 +20,39 @@ void PlayerTask::init() {
     display.displayText("Waiting to\nreceive player\ndata");
     wait(received);
     c = received.read();
-    data.set_player(c.get_id());    
-    data.set_weapon(c.get_data());
+    data.setPlayerId(c.get_id());
+    data.setWeaponId(c.get_data());
     display.displayText("player data received");
     display.displayText("Waiting for time");
     
     wait(received);
     c = received.read();
     if(c.get_id() == 0) {
-        data.set_time(c.get_data());
+        data.setTime(c.get_data());
     }
     display.displayText("game time received");
     hwlib::wait_ms(2000);
     char txt[] = "GAMETIME 10\n\nPlayer:  \nWeapon: id\n\nWaiting on start signal";
-    if (data.get_time() < 10) {
+    if (data.getTime() < 10) {
         txt[9] = '0';
-        txt[10] = (char) (48 + data.get_time());
+        txt[10] = (char) (48 + data.getTime());
     } else {
-        txt[9] = (char) (48 + (data.get_time() / 10));
-        txt[10] = (char) (48 + (data.get_time() % 10));
+        txt[9] = (char) (48 + (data.getTime() / 10));
+        txt[10] = (char) (48 + (data.getTime() % 10));
     }
-    if (data.get_player() < 10) {
+    if (data.getPlayerId() < 10) {
         txt[20] = '0';
-        txt[21] = (char) (48 + data.get_player());
+        txt[21] = (char) (48 + data.getPlayerId());
     } else {
-        txt[20] = (char) (48 + (data.get_player() / 10));
-        txt[21] = (char) (48 + (data.get_player() % 10));
+        txt[20] = (char) (48 + (data.getPlayerId() / 10));
+        txt[21] = (char) (48 + (data.getPlayerId() % 10));
     }
-    if (data.get_weapon() < 10) {
+    if (data.getWeaponId() < 10) {
         txt[31] = '0';
-        txt[32] = (char) (48 + data.get_weapon());
+        txt[32] = (char) (48 + data.getWeaponId());
     } else {
-        txt[31] = (char) (48 + (data.get_weapon() / 10));
-        txt[32] = (char) (48 + (data.get_weapon() % 10));
+        txt[31] = (char) (48 + (data.getWeaponId() / 10));
+        txt[32] = (char) (48 + (data.getWeaponId() % 10));
     }
     display.displayText(txt);
     wait(received);
@@ -78,21 +78,21 @@ void PlayerTask::start() {
         else if(event == received) {
             hwlib::cout << "received command\n";
             Command c = received.read();
-            if(c.get_id() != 0 && c.get_id() != data.get_player()) {
+            if(c.get_id() != 0 && c.get_id() != data.getPlayerId()) {
                 data.insertHitBy(c.get_id(), c.get_data());
             }
         }
         else if(event == gameTimer) {
-            data.set_time(data.get_time()-1);
-            if(data.get_time() < 0) {
+            data.setTime(data.getTime()-1);
+            if(data.getTime() < 0) {
                 char txt[] = "\n\n   YOU SURVIVED \n    END SCORE \n\n      100";
-                if(data.get_health() < 100) {
-                    if (data.get_health() < 10) {
+                if(data.getHealth() < 100) {
+                    if (data.getHealth() < 10) {
                         txt[41] = '0';
-                        txt[42] = (char) (48 + data.get_health());
+                        txt[42] = (char) (48 + data.getHealth());
                     } else {
-                        txt[41] = (char) (48 + (data.get_health() / 10));
-                        txt[42] = (char) (48 + (data.get_health() % 10));
+                        txt[41] = (char) (48 + (data.getHealth() / 10));
+                        txt[42] = (char) (48 + (data.getHealth() % 10));
                     }
                     txt[43] = ' ';
                 }
@@ -125,31 +125,31 @@ void PlayerTask::end() {
 void PlayerTask::updateDisplay(bool alive) {
  if(!alive) {
         char txt[] = "\n\n\n   YOU'RE DEAD \n Remaining time \n\n      10";
-        if (data.get_time() < 10) {
+        if (data.getTime() < 10) {
             txt[43] = '0';
-            txt[44] = (char) (48 + data.get_time());
+            txt[44] = (char) (48 + data.getTime());
         } else {
-            txt[43] = (char) (48 + (data.get_time() / 10));
-            txt[44] = (char) (48 + (data.get_time() % 10));
+            txt[43] = (char) (48 + (data.getTime() / 10));
+            txt[44] = (char) (48 + (data.getTime() % 10));
         }
         display.displayText(txt);
     } else {
         char txt[] = "hp: 100\nminutes left: 00";
-        hwlib::cout << data.get_time() << "\n";        
-        if (data.get_time() < 10) {
+        hwlib::cout << data.getTime() << "\n";
+        if (data.getTime() < 10) {
             txt[22] = '0';
-            txt[23] = (char) (48 + data.get_time());
+            txt[23] = (char) (48 + data.getTime());
         } else {
-            txt[22] = (char) (48 + (data.get_time() / 10));
-            txt[23] = (char) (48 + (data.get_time() % 10));
+            txt[22] = (char) (48 + (data.getTime() / 10));
+            txt[23] = (char) (48 + (data.getTime() % 10));
         }
-        if(data.get_health() < 100) {
-            if (data.get_health() < 10) {
+        if(data.getHealth() < 100) {
+            if (data.getHealth() < 10) {
                 txt[4] = '0';
-                txt[5] = (char) (48 + data.get_health());
+                txt[5] = (char) (48 + data.getHealth());
             } else {
-                txt[4] = (char) (48 + (data.get_health() / 10));
-                txt[5] = (char) (48 + (data.get_health() % 10));
+                txt[4] = (char) (48 + (data.getHealth() / 10));
+                txt[5] = (char) (48 + (data.getHealth() % 10));
             }
             txt[6] = ' ';
         }
