@@ -12,7 +12,7 @@
 
 class KeypadController : public rtos::task<> {
 private:
-    static constexpr int pollTime = 200*rtos::ms;
+    static constexpr int pollTime = 50*rtos::ms;
     hwlib::keypad<16> &keypad;
     IController *controller = nullptr;
     void main();
