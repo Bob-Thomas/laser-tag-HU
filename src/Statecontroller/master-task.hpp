@@ -21,6 +21,8 @@ private:
     GameData gameData;
     void main();
     int valid_id(char first, char second);
+    void registerPlayer(int playerId, int weaponId);
+    void registerTime(int playerId, int weaponId);
 public:
     MasterTask(DisplayController &display, IrController &irTransmitter);
     void keypad_pressed(char c);
