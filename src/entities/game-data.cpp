@@ -5,46 +5,62 @@
  */
 
 #include "game-data.hpp"
-GameData::GameData()
-{
+GameData::GameData() {
 }
 
-GameData::GameData(int playerId, int weaponId) : playerId(playerId), weaponId(weaponId) {
-
-}
-
-void GameData::setPlayer(int id)
-{
+void GameData::setPlayerId(int id) {
     playerId = id;
 }
 
-int GameData::getPlayer()
-{
+int GameData::getPlayerId() const {
     return playerId;
 }
 
-void GameData::setWeapon(int id)
-{
+void GameData::setWeaponId(int id) {
     weaponId = id;
 }
 
-int GameData::getWeapon() {
+int GameData::getWeaponId() const {
     return weaponId;
 }
 
-void GameData::setTime(int time)
-{
+void GameData::setTime(int time) {
     endTime = time;
 }
 
-int GameData::getTime() {
+int GameData::getTime() const {
     return endTime;
 }
 
 void GameData::setHealth(int hp) {
-    health =hp ;
+    health =hp;
 }
 
-int GameData::getHealth() {
+int GameData::getHealth() const {
     return health;
+}
+
+int GameData::getShotsFired() const {
+    return shotsFired;
+}
+
+void GameData::increaseShotsFired() {
+    shotsFired++;
+}
+
+int GameData::getReceivedHits() const {
+    return receivedHits;
+}
+
+void GameData::increaseReceivedHits() {
+    receivedHits++;
+}
+
+void GameData::insertHitBy(int playerId, int weaponId) {
+    hitByArr[receivedHits] = {playerId, weaponId};
+    health -= arsenal.getWeaponById(weaponId).getDamage();
+}
+
+HitBy GameData::getHitByArrFromIndex(int i) const {
+    return hitByArr[i];
 }

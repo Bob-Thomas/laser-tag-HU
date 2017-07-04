@@ -51,6 +51,12 @@ SOURCES 		  += src/application-logic/command.cpp
 HEADERS 		  += src/entities/game-data.hpp
 SOURCES 		  += src/entities/game-data.cpp
 
+HEADERS 		  += src/entities/arsenal.hpp
+SOURCES 		  += src/entities/arsenal.cpp
+
+HEADERS 		  += src/entities/weapon.hpp
+SOURCES 		  += src/entities/weapon.cpp
+
 ## States
 HEADERS           +=  src/Statecontroller/player-task.hpp
 SOURCES           +=  src/Statecontroller/player-task.cpp

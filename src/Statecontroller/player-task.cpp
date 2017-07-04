@@ -1,6 +1,6 @@
 #include "player-task.hpp"
 
-PlayerTask::PlayerTask(SoundController& sound, DisplayController& display, IrController &irTransmitter): task("Player task"), sound(sound), display(display), irTransmitter(irTransmitter), shoot(this, "shoot-flag"), received(this, "received channel"), gameTimer(this, 60*rtos::s, "gametimer") {
+PlayerTask::PlayerTask(SoundController& sound, DisplayController& display): task("Player task"), sound(sound), display(display), shoot(this, "shoot-flag"), received(this, "received channel"), gameTimer(this, 60*rtos::s, "gametimer") {
 
 }
 
@@ -20,18 +20,17 @@ void PlayerTask::init() {
     display.displayText("Waiting to\nreceive player\ndata");
     wait(received);
     c = received.read();
-    data.setPlayer(c.get_id());
-    data.setWeapon(c.get_data());
+    data.setPlayerId(c.get_id());
+    data.setWeaponId(c.get_data());
     display.displayText("player data received");
-    irTransmitter.send(c.get_encoded());
     display.displayText("Waiting for time");
+    
     wait(received);
     c = received.read();
     if(c.get_id() == 0) {
         data.setTime(c.get_data());
     }
     display.displayText("game time received");
-    irTransmitter.send(c.get_encoded());
     hwlib::wait_ms(2000);
     char txt[] = "GAMETIME 10\n\nPlayer:  \nWeapon: id\n\nWaiting on start signal";
     if (data.getTime() < 10) {
@@ -41,19 +40,19 @@ void PlayerTask::init() {
         txt[9] = (char) (48 + (data.getTime() / 10));
         txt[10] = (char) (48 + (data.getTime() % 10));
     }
-    if (data.getPlayer() < 10) {
+    if (data.getPlayerId() < 10) {
         txt[20] = '0';
-        txt[21] = (char) (48 + data.getPlayer());
+        txt[21] = (char) (48 + data.getPlayerId());
     } else {
-        txt[20] = (char) (48 + (data.getPlayer() / 10));
-        txt[21] = (char) (48 + (data.getPlayer() % 10));
+        txt[20] = (char) (48 + (data.getPlayerId() / 10));
+        txt[21] = (char) (48 + (data.getPlayerId() % 10));
     }
-    if (data.getWeapon() < 10) {
+    if (data.getWeaponId() < 10) {
         txt[31] = '0';
-        txt[32] = (char) (48 + data.getWeapon());
+        txt[32] = (char) (48 + data.getWeaponId());
     } else {
-        txt[31] = (char) (48 + (data.getWeapon() / 10));
-        txt[32] = (char) (48 + (data.getWeapon() % 10));
+        txt[31] = (char) (48 + (data.getWeaponId() / 10));
+        txt[32] = (char) (48 + (data.getWeaponId() % 10));
     }
     display.displayText(txt);
     wait(received);
@@ -74,13 +73,13 @@ void PlayerTask::start() {
         if(event == shoot) {
             hwlib::cout << "pew\n";
             sound.play_shoot();
-            irTransmitter.send(Command(data.getPlayer(), data.getWeapon()).get_encoded());
+            data.increaseShotsFired();
         }
         else if(event == received) {
             hwlib::cout << "received command\n";
             Command c = received.read();
-            if(c.get_id() != 0 && c.get_id() != data.getPlayer()) {
-
+            if(c.get_id() != 0 && c.get_id() != data.getPlayerId()) {
+                data.insertHitBy(c.get_id(), c.get_data());
             }
         }
         else if(event == gameTimer) {
@@ -98,6 +97,19 @@ void PlayerTask::start() {
                     txt[43] = ' ';
                 }
                 display.displayText(txt);
+
+                // print the hit by information in console
+                hwlib::cout << "Hit by information: \n";
+                if(data.getReceivedHits() == 0) {
+                    hwlib::cout << "No hit information";
+                } else {
+                    for(int i = 0; i < data.getReceivedHits(); i++) {
+                        hwlib::cout << "player id " << data.getHitByArrFromIndex(i).playerId << " with weapon " <<
+                        data.getHitByArrFromIndex(i).WeaponId << "\n";
+                    }
+                }
+                // print amount of shots fired
+                hwlib::cout << "amount of shots fired by you : " << data.getShotsFired();
             } else {
                 updateDisplay(true);
             }
@@ -107,7 +119,7 @@ void PlayerTask::start() {
 }
 
 void PlayerTask::end() {
-
+ 
 }
 
 void PlayerTask::updateDisplay(bool alive) {
@@ -142,7 +154,7 @@ void PlayerTask::updateDisplay(bool alive) {
             txt[6] = ' ';
         }
         display.displayText(txt);
-    }
+    }  
 }
 
 void PlayerTask::button_pressed() {
