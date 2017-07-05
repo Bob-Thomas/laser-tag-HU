@@ -1,3 +1,10 @@
+/**
+ * \file      arsenal.hpp
+ * \author    Bob Thomas
+ * \author    Robbie Valkenburg
+ * \brief     class that will run the application task for game leader/master.
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #ifndef MASTER_TASK_HPP
 #define MASTER_TASK_HPP
 #include "hwlib.hpp"
@@ -64,17 +71,17 @@ public:
      * Overload of the pure virtual function in IController
      * \param c key that has bene pressed on the keypad
      */
-    void keypad_pressed(char c);
+    void keypadPressed(char c);
     /**
      * \brief function that writes the received command over ir into it's channel
      * Overload of the pure virtual function in IController
      * \param c command that has been received by the IrReceiveController
      */
-    void command_received(Command c);
+    void commandReceived(Command c);
     /**
      * \brief overload of the pure virtual function it has no use for this task
      */
-    void button_pressed() {}
+    void buttonPressed() {}
 
 };
 #endif //MASTER_TASK_HPP

@@ -110,11 +110,11 @@ void PlayerTask::end() {
 void PlayerTask::updateDisplay(bool alive) {
 }
 
-void PlayerTask::button_pressed() {
+void PlayerTask::buttonPressed() {
     shoot.set();
 }
 
-void PlayerTask::command_received(Command c) {
+void PlayerTask::commandReceived(Command c) {
     hwlib::cout << c.get_id() << " | " << c.get_data() << "\n";
     received.clear();
     received.write(c);

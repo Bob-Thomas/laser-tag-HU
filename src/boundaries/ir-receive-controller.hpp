@@ -1,4 +1,10 @@
-
+/**
+ * \file      ir-receive-controller.hpp
+ * \author    René de Kluis
+ * \author    Robbie Valkenburg
+ * \brief     Class for recieving IR signal
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #ifndef LASER_IRRECEIVECONTROLLER_HPP
 #define LASER_IRRECEIVECONTROLLER_HPP
 
@@ -45,7 +51,7 @@ private:
      * \return      uint16_t    The full 16-bit signal that is received from the IR-receiver.
      *
      */
-    uint16_t getByte(uint16_t bitStream = 0, uint16_t i = 0);
+    uint16_t getData(uint16_t bitStream = 0, uint16_t i = 0);
 
 
 public:

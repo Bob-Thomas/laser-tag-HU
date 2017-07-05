@@ -1,5 +1,5 @@
 /**
- * \file        ir-controller.hpp
+ * \file        ir-send-controller.hpp
  * \brief       This class will send a 16 bit IR-signal.
  * \author      René de Kluis
  * \copyright   Copyright (c) 2017, The R2D2 Team

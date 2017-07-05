@@ -16,7 +16,7 @@
  */
 class ButtonController : public rtos::task<>{
 private:
-    /// the button pin the task will poll
+    /// The button pin the task will poll
     hwlib::target::pin_in &button;
     /// A pointer to an existing controller that needs to be notified
     IController *listener = nullptr;

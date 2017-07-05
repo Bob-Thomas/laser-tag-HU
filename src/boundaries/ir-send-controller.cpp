@@ -1,5 +1,5 @@
 /**
- * \file        ir-controller.cpp
+ * \file        ir-send-controller.cpp
  * \author      René de Kluis
  * \copyright   Copyright (c) 2017, The R2D2 Team
  * \license     See LICENSE

@@ -1,6 +1,8 @@
-//
-// Created by robbie on 3-7-2017.
-//
+/**
+ * \file      arsenal.hpp
+ * \author    Robbie Valkenburg
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 
 #include "arsenal.hpp"
 

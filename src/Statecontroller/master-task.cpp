@@ -66,13 +66,13 @@ void MasterTask::main() {
     }
 
 }
-void MasterTask::command_received(Command c) {
+void MasterTask::commandReceived(Command c) {
     hwlib::cout << c.get_id() << " | " << c.get_data() << "\n";
     received.clear();
     received.write(c);
 }
 
-void MasterTask::keypad_pressed(char c) {
+void MasterTask::keypadPressed(char c) {
     keypadInput.write(c);
 }
 
