@@ -17,28 +17,19 @@
 
 class DisplayController : public rtos::task<> {
 private:
-    /**
-     * oled boundary reference
-     */
+    ///oled boundary reference
     hwlib::glcd_oled_buffered &oled;
+
+    ///Window_stream what will be printed on the screen.
     hwlib::window_ostream stream;
+
+    ///The font that is used on the Oled
     hwlib::font_default_8x8 font;
 
-    char *oledText;
-
-    /**
-     * RTOS timer for updating screen
-     */
-    rtos::timer timer_screen;
-
-    /**
-     * RTOS flag to flush screen
-     */
+    ///RTOS flag to flush screen
     rtos::flag flushFlag;
 
-    /**
-     * RTOS task function
-     */
+    ///RTOS task function
     void main();
 public:
 
