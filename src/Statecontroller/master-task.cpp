@@ -1,240 +1,232 @@
 #include "master-task.hpp"
+constexpr const char* const MasterTask::menuItems[];
 
-MasterTask::MasterTask(DisplayController &display, IrController &irTransmitter) : task("Master task"), display(display), irTransmitter(irTransmitter), keypadInput(this, "keypad channel"), received(this, "received channel")
-{
+MasterTask::MasterTask(DisplayController &display, IrController &irTransmitter)
+    : task("Master task"), display(display), irTransmitter(irTransmitter),
+      keypadInput(this, "keypad channel"), received(this, "received channel") {
 }
 
-void MasterTask::main()
-{
-    display.displayText("Welcome to LaserTak 0.1\n\nPress anykey");
+void MasterTask::main() {
+    display.getWindowOstream() << "\fWelcome to\n LaserTak 0.1\n\nPress anykey";
+    display.flush();
     wait(keypadInput);
     keypadInput.clear();
-    char txt_1[9] = "Time: 00";
-    display.displayText(txt_1);
-
-    // getting first character
+    display.getWindowOstream() <<
+        "\fFill in gametime\n\n" <<
+        "Minutes: ";
+    display.flush();
     wait(keypadInput);
-    auto first = keypadInput.read();
-    txt_1[6] = first;
-    txt_1[7] = '\0';
-    display.displayText(txt_1);
+    int time = keypadInput.read() - 48;
+    display.getWindowOstream() <<
+       "\fFill in gametime\n\n" <<
+       "Minutes: " << time;
+    display.flush();
 
-    // getting second character
     wait(keypadInput);
-    auto second = keypadInput.read();
-    txt_1[7] = second;
-    txt_1[8] = '\0';
-    display.displayText(txt_1);
-    char txt_id[2];
-    txt_id[0] = first;
-    txt_id[1] = second;
-    int time = atoi(txt_id);
+    time = (10*time) + (keypadInput.read() - 48);
+    display.getWindowOstream() <<
+        "\fFill in gametime\n\n" <<
+        "Minutes: " << time << "\n press anykey";
+    display.flush();
     gameData.setTime(time);
-    for (;;)
-    {
-        hwlib::cout << "Connected Players: " << connectedPlayers << "\n";
-        char txt[] = "Press A to \n insert player.\n\nPress B to \nreceive data\n \nPress C to \ninsert command. \nPress * to start";
-
-        // default screen
-        display.displayText(txt);
+    hwlib::wait_ms(200);
+    while(true) {
         wait(keypadInput);
-        auto c = keypadInput.read();
-
-        if (c == '*')
-        {
-            char start[32] = "STARTING GAME\n\n ";
-            uint16_t c = Command(0, 0).get_encoded();
-            for(int i = 0; i < 16; i++) {
-                start[16+i] = ((c >> (15 - i)) & 1) ? '1' : '0';
+        char c = keypadInput.read();
+        if (c == '2') {
+            if (menuSelected >= menuSize-1) {
+                menuSelected = 0;
+            } else {
+                menuSelected++;
             }
-            display.displayText(start);
-            irTransmitter.send(c);
-            hwlib::wait_ms(500);
-        }
-
-        if (c == 'B')
-        {
-            display.displayText("Ready to receive data\nPlayer");
-        }
-
-        if (c == 'A')
-        {
-            int playerId = 0;
-            int weaponId = 0;
-            char txt_1[15] = "Type id: \n\n\n";
-            display.displayText(txt_1);
-
-            // getting first character
-            wait(keypadInput);
-            auto first = keypadInput.read();
-            txt_1[12] = first;
-            txt_1[13] = '\0';
-            display.displayText(txt_1);
-
-            // getting second character
-            wait(keypadInput);
-            auto second = keypadInput.read();
-            txt_1[13] = second;
-            txt_1[14] = '\0';
-            display.displayText(txt_1);
-
-            // check if the id is valid
-            auto valid = valid_id(first, second);
-
-            // when valid is alright
-            if (valid != 0)
-            {
-
-                // assign to player id
-                playerId = valid;
-
-                // asking for weapon
-                display.displayText("Press B to \n Select weapon.");
-
-                wait(keypadInput);
-                auto c = keypadInput.read();
-
-                // weapon select
-                if (c == 'B')
-                {
-
-                    display.displayText("Weapons: \n 1.Power Beam \n 2.Sonic Beam \n 3.Laser Beam \n");
-                    wait(keypadInput);
-                    auto c = keypadInput.read();
-                    // player selected weapon
-                    while (c != '1' && c != '2' && c != '3' && c != 'A')
-                    {
-
-                        // listen again for keypad input
-                        wait(keypadInput);
-                        c = keypadInput.read();
-                    }
-
-                    if (c != 'A')
-                    {
-
-                        weaponId = atoi(&c);
-
-                        hwlib::cout << "TEST CASE PLAYER ID:" << playerId << "\n TEST CASE WEAPON ID " << weaponId << "\n";
-                        display.displayText("Press * to \n send data.");
-                        wait(keypadInput);
-                        auto c = keypadInput.read();
-                        if (c == '*')
-                        {
-                            display.displayText("Sending data.. \nWaiting for\n confirmation");
-                            Command c(playerId, weaponId);
-                            irTransmitter.send(c.get_encoded());
-                            wait(received);
-                            Command confirmationCommand = received.read();
-                            if (confirmationCommand.get_encoded() == c.get_encoded())
-                            {
-                                display.displayText("Player confirmed\n sending time\n ");
-                                irTransmitter.send(Command(0, gameData.getTime()).get_encoded());
-                                wait(received);
-                                confirmationCommand = received.read();
-                                if (confirmationCommand.get_encoded() == c.get_encoded())
-                                {
-                                    players[connectedPlayers] = GameData(c.get_id(), c.get_data());
-                                    connectedPlayers++;
-                                }
-                                display.displayText("Confirmation received\n returning to menu");
-                                sleep(2 * rtos::s);
-                            }
-                        }
-                    }
-
-                    // player can select id again...
-                }
-                else
-                {
-                    display.displayText("incorrect id.");
-                }
+        } else if (c == '8') {
+            if (menuSelected-1 < 0) {
+                menuSelected = menuSize-1;
+            } else {
+                menuSelected--;
             }
         }
-
-        if (c == 'C')
-        {
-            int counter = 1;
-            customCommand = 0;
-            customCommand |= 1 << 15;
-            char first_screen_command[] = "1..........xxxxx";
-            display.displayText(first_screen_command);
-
-            while (counter < 11)
-            {
-                wait(keypadInput);
-                char c = keypadInput.read();
-                if (c == '1' || c == '0')
-                {
-                    first_screen_command[counter] = c;
-                    if (c == '1')
-                    {
-                        customCommand |= (1 << (15 - counter));
-                    }
-                    display.displayText(first_screen_command);
-                    counter++;
-                }
-                else
-                {
-                    commandFull = 0;
-                    break;
-                }
-            }
-            customCommand += (Command::get_id(customCommand) ^ Command::get_data(customCommand));
-            for (int i = 0; i < 16; i++)
-            {
-                first_screen_command[i] = ((customCommand >> (15 - i)) & 1) ? '1' : '0';
-            }
-            display.displayText(first_screen_command);
-            sleep(2 * rtos::s);
-            display.displayText("Press * \nany time \nto send  \ncommand. \nPress any \nkey to \ncontinue.");
-            commandFull = '1';
+        else if(c == 'A') {
+            registerPlayer();
         }
-        if (c == '#')
-        {
-
-            if (commandFull == '1')
-            {
-                display.displayText("send last \ninserted command");
-                irTransmitter.send(customCommand);
-            }
-            else
-            {
-                display.displayText("Incorrect  \nCommand");
-            }
+        else if(c == 'B') {
+            receiveData();
         }
-
-        hwlib::cout << c;
-    }
-}
-int MasterTask::valid_id(char first, char second)
-{
-
-    // check if the chars are numbers
-    if (first >= '0' && first <= '9' && second >= '0' && second <= '9')
-    {
-        char txt_id[2];
-        txt_id[0] = first;
-        txt_id[1] = second;
-        int id = atoi(txt_id);
-
-        if (id > 0 && id < 32)
-        {
-            return id;
+        else if(c == 'C') {
+            newCommand();
         }
-
-        return 0;
+        else if(c == '*') {
+            sendStart();
+        }
+        else if(c == '#') {
+            sendSavedCommand();
+        }
+        display.getWindowOstream() << "\f Press 2 or 8\n   To scroll: " << menuSelected << "\n\n\n" << menuItems[menuSelected];
+        display.flush();
     }
 
-    return 0;
 }
-
-void MasterTask::command_received(Command c)
-{
+void MasterTask::commandReceived(Command c) {
+    hwlib::cout << c.get_id() << " | " << c.get_data() << "\n";
+    received.clear();
     received.write(c);
 }
 
-void MasterTask::keypad_pressed(char c)
-{
+void MasterTask::keypadPressed(char c) {
     keypadInput.write(c);
 }
+
+void MasterTask::receiveData() {
+    //TODO serial reads from the weapons
+}
+
+void MasterTask::newCommand() {
+    int counter = 1;
+    uint16_t tempCustomCommand = (1 << 15);
+    while(true) {
+        display.getWindowOstream() << "\f ADD NEW COMMAND\n\n";
+        for (int i = 0; i < 11; i++) {
+            if (counter <= i) {
+                display.getWindowOstream() << 'x';
+            } else {
+                display.getWindowOstream() << (tempCustomCommand >> (15 - i) & 1);
+            }
+        }
+        if(counter >= 16) {
+            display.getWindowOstream() << "\n\nCHECKSUM = ";
+            for(int i = 0; i < 5; i++) {
+                display.getWindowOstream() << (tempCustomCommand >> (i) & 1);
+            }
+            display.getWindowOstream() << "\n Ready to save";
+        }
+        display.flush();
+        wait(keypadInput);
+        char c = keypadInput.read();
+        if(c == '#') {
+            if(counter < 16) {
+                display.getWindowOstream() << "\fInvalid command";
+                display.flush();
+                sleep(200);
+            } else {
+                customCommand = tempCustomCommand;
+                display.getWindowOstream() << "\fCommand saved";
+                display.flush();
+                sleep(200);
+            }
+            break;
+        }
+        if (c == '1' || c == '0') {
+            tempCustomCommand |= ((int) (c - 48) << (15 - counter));
+            counter++;
+            if (counter >= 11) {
+                tempCustomCommand = tempCustomCommand + (Command::get_id_from_byte(tempCustomCommand) ^
+                                                 Command::get_data_from_byte(tempCustomCommand));
+                counter += 5;
+            }
+        }
+        hwlib::cout << "\n" << counter << "\n";
+    }
+}
+
+void MasterTask::sendStart() {
+    display.getWindowOstream() << "\f START\n\n SENDING...";
+    display.flush();
+    irTransmitter.send(Command(0, 0).get_encoded());
+    display.getWindowOstream() << "\f START\n\n SENDING..";
+    display.flush();
+}
+
+void MasterTask::sendSavedCommand() {
+    if(customCommand != 0) {
+        display.getWindowOstream() << "\f  SENDING...\n\n";
+        for (int i = 0; i < 16; i++) {
+            display.getWindowOstream() << (customCommand >> (15 - i) & 1);
+        }
+        display.flush();
+        irTransmitter.send(customCommand);
+        display.getWindowOstream() << "\f  SENDING...\n\n";
+        for (int i = 0; i < 16; i++) {
+            display.getWindowOstream() << (customCommand >> (15 - i) & 1);
+        }
+        display.flush();
+    } else {
+        display.getWindowOstream() << "\n\n NO SAVED \n   COMMAND";\
+        display.flush();
+    }
+}
+
+void MasterTask::registerPlayer() {
+    display.getWindowOstream()  <<
+        "\f  NEW PLAYER\n\n" <<
+        "ID: \n" <<
+        "Weapon: ";
+    display.flush();
+    wait(keypadInput);
+    int id = keypadInput.read() - 48;
+    display.getWindowOstream()  <<
+        "\f  NEW PLAYER\n\n" <<
+        "ID: " << id <<
+        "\nWeapon: ";
+    display.flush();
+    wait(keypadInput);
+    id = (id*10) + (keypadInput.read() - 48);
+    display.getWindowOstream()  <<
+        "\f  NEW PLAYER\n\n" <<
+        "ID: " << id <<
+        "\nWeapon: ";
+    display.flush();
+    wait(keypadInput);
+    int weapon = keypadInput.read() - 48;
+    display.getWindowOstream()  <<
+        "\f  NEW PLAYER\n\n" <<
+        "ID: " << id <<
+        "\nWeapon: " << weapon;
+    display.flush();
+    wait(keypadInput);
+    weapon = (weapon*10)+(keypadInput.read() - 48);
+    display.getWindowOstream()  <<
+        "\f  NEW PLAYER\n\n" <<
+        "ID: " << id <<
+        "\nWeapon: " << weapon;
+    display.flush();
+    wait(keypadInput);
+    keypadInput.clear();
+    display.flush();
+    while(true) {
+        display.getWindowOstream()  <<
+        "\f  NEW PLAYER\n\n" <<
+        "* to send player\n B to continue";
+        display.flush();
+        wait(keypadInput);
+        char c = keypadInput.read();
+        if(c == '*') {
+            display.getWindowOstream() << "\f  SENDING...";
+            display.flush();
+            irTransmitter.send(Command(id, weapon).get_encoded());
+            display.getWindowOstream() << "\f  SENDING..";
+            display.flush();
+        }
+        if(c == 'B') {
+            while(true) {
+                display.getWindowOstream() <<
+                                           "\f  NEW PLAYER\n\n" <<
+                                           "* to send time\n B to continue";
+                display.flush();
+                wait(keypadInput);
+                char c = keypadInput.read();
+                if (c == '*') {
+                    display.getWindowOstream() << "\f  SENDING...";
+                    display.flush();
+                    irTransmitter.send(Command(0, gameData.getTime()).get_encoded());
+                    display.getWindowOstream() << "\f  SENDING..";
+                    display.flush();
+                }
+                if (c == 'B') {
+                    break;
+                }
+            }
+            break;
+        }
+    }
+
+ }

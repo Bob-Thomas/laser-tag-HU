@@ -1,11 +1,11 @@
 /**
- * \file        ir-controller.cpp
+ * \file        ir-send-controller.cpp
  * \author      René de Kluis
  * \copyright   Copyright (c) 2017, The R2D2 Team
  * \license     See LICENSE
  */
 
-#include "ir-controller.hpp"
+#include "ir-send-controller.hpp"
 
 IrController::IrController(hwlib::target::d2_36kHz & diode):
     diode(diode)

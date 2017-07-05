@@ -12,11 +12,20 @@
 
 class KeypadController : public rtos::task<> {
 private:
-    static constexpr int pollTime = 200*rtos::ms;
+    /// The poll time to check on keypad input.
+    static constexpr int pollTime = 50*rtos::ms;
+    /// Instance of the keypad.
     hwlib::keypad<16> &keypad;
+    /// Listener for keypad.
     IController *controller = nullptr;
+    /// RTOS task
     void main();
 public:
+    /*
+     * \brief The constructor.
+     * \param The keyPad instance from hwlib
+     * \param The listener for the keypad controller.
+     */
     KeypadController(hwlib::keypad<16> &keypad, IController *controller);
 
 };

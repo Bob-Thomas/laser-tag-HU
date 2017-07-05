@@ -5,7 +5,7 @@
  */
 #include "command.hpp"
 
-Command::Command() : id(0), data(0) {
+Command::Command() : id(-1), data(-1) {
     encode();
 }
 Command::Command(int id, int data) : id(id), data(data) {
@@ -26,8 +26,8 @@ int Command::decode() {
     if(!is_valid(encoded) && !((encoded >> 15) & 1)) {
         return 0;
     } else {
-        id = get_id(encoded);
-        data = get_data(encoded);
+        id = get_id_from_byte(encoded);
+        data = get_data_from_byte(encoded);
     }
     return 1;
 }
