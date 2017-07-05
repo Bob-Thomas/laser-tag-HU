@@ -9,7 +9,6 @@ DisplayController::DisplayController(hwlib::glcd_oled_buffered &oled ):
         oled(oled),
         stream(oled, font),
         timer_screen(this, "timer screen"),
-        clearFlag(this, "clear screen flag"),
         flushFlag(this, "set flush flag")
 
 {}
@@ -31,7 +30,7 @@ void DisplayController::setDisplayText(const char * text) {
 
 
 
-hwlib::glcd_oled_buffered DisplayController::getOled(){
+hwlib::glcd_oled_buffered &DisplayController::getOled(){
     return oled;
 }
 
