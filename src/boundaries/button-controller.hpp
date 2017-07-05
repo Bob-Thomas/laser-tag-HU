@@ -29,6 +29,7 @@ private:
 public:
     /**
      * \brief ButtonController constructor
+     *
      * \param[in] button hwlib pin that the button is wired to
      * \param[in] listener a pointer to an existing Controller
      */

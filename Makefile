@@ -10,7 +10,7 @@
 
 # settings for Arduino Due projects
 TARGET            ?= arduino_due
-SERIAL_PORT       ?= COM3
+SERIAL_PORT       ?= COM2
 CONSOLE_BAUDRATE  ?= 38400
 STACK_SIZE        ?= 81920
 HEAP              ?= BMPTK
@@ -31,8 +31,8 @@ SEARCH            += ./libs/hwlib
 SOURCES           += hwlib.cpp
 
 ## Boundaries
-HEADERS           += src/boundaries/button_controller.hpp
-SOURCES           += src/boundaries/button_controller.cpp
+HEADERS           += src/boundaries/button-controller.hpp
+SOURCES           += src/boundaries/button-controller.cpp
 
 HEADERS           +=  src/boundaries/keypad-controller.hpp
 SOURCES           +=  src/boundaries/keypad-controller.cpp
