@@ -13,10 +13,11 @@
 class Arsenal {
 private:
     /// A list of Weapons that the player can use during game.
-    const Weapon weapons [3] = {
-            {"F40 LaserSpray", 7, 1},
-            {"BeamGunner", 14, 2},
-            {"SonicBlaster", 35, 4}
+    const Weapon weapons [4] = {
+            {"none", 0, 0},
+            {"F40 LaserSpray", 7, 1000},
+            {"BeamGunner", 14, 2000},
+            {"SonicBlaster", 35, 4000}
     };
 public:
     /// Get a single instance of a Weapon class by id.
