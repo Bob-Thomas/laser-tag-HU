@@ -15,7 +15,7 @@ void DisplayController::main() {
     for(;;){
         oled.clear();
         wait( flushFlag );
-        flush();
+        oled.flush();
     }
 }
 
@@ -34,16 +34,9 @@ hwlib::window_ostream& DisplayController::getWindowOstream(){
     return stream;
 }
 
-  //////////////////////
- //  Set functions   //
-//////////////////////
-void DisplayController::setFlushFlag(){
-    flushFlag.set();
-}
-
 //flush
 void DisplayController::flush(){
-    oled.flush();
+    flushFlag.set();
 }
 
 

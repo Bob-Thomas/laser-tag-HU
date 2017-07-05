@@ -80,15 +80,6 @@ public:
      */
     void flush();
 
-    /**
-     * \brief set the flushFlag.
-     *
-     * This function will set the flushFlag to the stream will be printed.
-     *
-     */
-    void setFlushFlag();
-
-
 };
 
 
