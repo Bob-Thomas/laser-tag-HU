@@ -15,6 +15,14 @@
 #include "../boundaries/ir-send-controller.hpp"
 #include "../boundaries/display-controller.hpp"
 #include "stdlib.h"
+
+struct {
+    bool is_alive = false;
+    int playerId = 0;
+    int score = 0;
+} typedef PlayerScore;
+
+
 class MasterTask : public rtos::task<>, public IController {
 private:
     /**
@@ -44,6 +52,8 @@ private:
     uint16_t customCommand = 0;
     /// Gamedata to save the gametime and whatnot
     GameData gameData;
+    /// Scores of the players
+    PlayerScore scores[32];
     /// Rtos main function that runs the task
     void main();
     /// function that uses the keypad and ir to register players
@@ -57,8 +67,12 @@ private:
      * start command is 1 00000 00000 00000
      */
     void sendStart();
+
     /// function that sends the saved custom command over ir
     void sendSavedCommand();
+
+    /// function that returns index playerScore from array by playerId
+    int getScoreIndexById(int id);
 public:
     /**
      * Constructor for the MasterTask class

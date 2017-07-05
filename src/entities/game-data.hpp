@@ -13,7 +13,7 @@
  */
 struct {
     int playerId;
-    int WeaponId;
+    int weaponId;
 } typedef HitBy;
 
 class GameData {

@@ -100,7 +100,7 @@ void PlayerTask::end() {
         hwlib::cout << data.getShotsFired() << "-";
         for (int i = 0; i < data.getReceivedHits(); i++) {
             hwlib::cout << data.getHitByArrFromIndex(i).playerId << "-";
-            hwlib::cout << data.getHitByArrFromIndex(i).WeaponId << "-";
+            hwlib::cout << data.getHitByArrFromIndex(i).weaponId << "-";
         }
         hwlib::cout << data.getReceivedHits() << "-";
         hwlib::cout << data.getTime() << ";";
