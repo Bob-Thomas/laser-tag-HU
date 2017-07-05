@@ -81,14 +81,6 @@ public:
     void flush();
 
     /**
-     * \brief Set a text to print on the display.
-     *
-     * \param text The text that has to be printed on the display.
-     *
-     */
-    void setDisplayText(const char * text);
-
-    /**
      * \brief set the flushFlag.
      *
      * This function will set the flushFlag to the stream will be printed.
