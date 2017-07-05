@@ -83,25 +83,15 @@ void MasterTask::receiveData() {
         if (key == 'C') {
             display.getWindowOstream() << "\fRECEIVING STARTED";
             display.flush();
-            while(!hwlib::cin.char_available()){}
-            hwlib::cin >> d;
-            d = d - 48;
-            if (d == 0) {
-                d = -1;
+            wait(received);
+            Command c = received.read();
+            if (c.get_id() == 0 && c.get_data() == 0) {
+                irTransmitter.send(Command(0, 0).get_encoded());
                 display.getWindowOstream() << "\f\n\n\n  RECEIVING DATA..";
                 display.flush();
-                //GET PLAYER ID
-                while(!hwlib::cin.char_available()){}
-                d = hwlib::cin.getc();
-                d = d - 48;
-                while(!hwlib::cin.char_available()){}
-                hwlib::cin >> d;
-                if (d == '-') {
-                    index = getScoreIndexById(d);
-                } else {
-                    d = (d * 10) + (d - 48);
-                    index = getScoreIndexById(d);
-                }
+                wait(received);
+                c = received.read();
+                index = getScoreIndexById(c.get_id());
                 if (index != -1) {
                     score = scores[index];
                 } else {
@@ -109,26 +99,15 @@ void MasterTask::receiveData() {
                     score = scores[count];
                     count++;
                 }
-                //IS PLAYER ALIVE
-                while(!hwlib::cin.char_available()){}
-                hwlib::cin >> d;
-                d = d - 48;
-                score.is_alive = d;
-                //RETRIEVE HIT DATA
-                while (d != 0) {
+                score.is_alive = c.get_data();
+                while(true) {
+                    wait(received);
                     index = -1;
-                    //PLAYER ID
-                    while(!hwlib::cin.char_available()){}
-                    hwlib::cin >> d;
-                    d = d - 48;
-                    while(!hwlib::cin.char_available()){}
-                    hwlib::cin >> d;
-                    if (d == '-') {
-                        index = getScoreIndexById(d);
-                    } else {
-                        d = (d * 10) + (d - 48);
-                        index = getScoreIndexById(d);
+                    c = received.read();
+                    if(c.get_encoded() == Command(0,0)) {
+                        break;
                     }
+                    index = getScoreIndexById(c.get_id());
                     if (index != -1) {
                         score = scores[index];
                     } else {
@@ -136,24 +115,22 @@ void MasterTask::receiveData() {
                         score = scores[count];
                         count++;
                     }
-                    while(!hwlib::cin.char_available()){}
-                    hwlib::cin >> d;
-                    d = d - 48;
-                    score.score = score.score + arsenal.getWeaponById(d).getDamage();
+                    score.score = score.score + arsenal.getWeaponById(c.get_data()).getDamage();
                     display.getWindowOstream() << "\f\n\n\n  RECEIVING DATA...";
                     display.flush();
                 }
                 display.getWindowOstream() << "\fCOMPLETED";
                 display.flush();
+                sleep(3*rtos::s);
                 break;
             }
         }
         if (key == 'B') {
-           for(int i = 0; i < 32; i++) {
-               if(scores[i].playerId != 0) {
-                   hwlib::cout << "PLAYER -" << scores[i].playerId << " : " << scores[i].score << "\n";
-               }
-           }
+            for (int i = 0; i < 32; i++) {
+                if (scores[i].playerId != 0) {
+                    hwlib::cout << "PLAYER -" << scores[i].playerId << " : " << scores[i].score << "\n";
+                }
+            }
         }
         if (key == '#') {
             break;
