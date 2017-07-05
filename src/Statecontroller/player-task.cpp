@@ -1,6 +1,6 @@
 #include "player-task.hpp"
 
-PlayerTask::PlayerTask(SoundController &sound, DisplayController &display, IrController &irTransmitter) : task("Player task"), sound(sound), display(display), irTransmitter(irTransmitter), shoot(this, "shoot-flag"), received(this, "received channel"), gameTimer(this, 60 * rtos::s, "gametimer") {
+PlayerTask::PlayerTask(SoundController &sound, DisplayController &display, IrController &irTransmitter) : task("Player task"), sound(sound), display(display), irTransmitter(irTransmitter), shoot(this, "shoot-flag"), received(this, "received channel"), gameTimer(this, 60 * rtos::s, "gametimer"), gunCooldown(this, "cooldown-timer"), hitCooldown(this, "hit-cooldown-timer") {
 }
 
 void PlayerTask::main() {
@@ -61,28 +61,40 @@ void PlayerTask::init() {
 
 void PlayerTask::start() {
     gameTimer.clear();
-    rtos::clock test(this, 1 * rtos::s, "test tmer");
     for (;;) {
-        auto event = wait(shoot + received + gameTimer + test);
+        auto event = wait(shoot + received + gameTimer + gunCooldown + hitCooldown);
         if (event == shoot) {
-            hwlib::cout << "pew\n";
-            sound.play_shoot();
-            data.increaseShotsFired();
+            if(canShoot) {
+                hwlib::cout << "pew\n";
+                sound.play_shoot();
+                irTransmitter.send(Command(data.getPlayerId(), data.getWeaponId()).get_encoded());
+                data.increaseShotsFired();
+                canShoot = false;
+                gunCooldown.set(data.getWeaponCooldownById(data.getWeaponId())*rtos::ms);
+            }
         } else if (event == received) {
-            hwlib::cout << "received command\n";
-            Command c = received.read();
-            if (c.get_id() != 0 && c.get_id() != data.getPlayerId()) {
-                hwlib::cout << "hit\n";
-                data.insertHitBy(c.get_id(), c.get_data());
-                if(data.getHealth() <= 0) {
-                    break;
+            if(canBeHit) {
+                hwlib::cout << "received command\n";
+                Command c = received.read();
+                if (c.get_id() != 0 && c.get_id() != data.getPlayerId()) {
+                    hwlib::cout << "hit\n";
+                    data.insertHitBy(c.get_id(), c.get_data());
+                    if(data.getHealth() <= 0) {
+                        break;
+                    }
                 }
+                hitCooldown.set(10*rtos::ms);
+                canBeHit = false;
             }
         } else if (event == gameTimer) {
             data.setTime(data.getTime() - 1);
             if (data.getTime() < 0) {
                 break;
             }
+        } else if (event == gunCooldown) {
+            canShoot = true;
+        } else if (event == hitCooldown) {
+            canBeHit = true;
         }
     }
     end();

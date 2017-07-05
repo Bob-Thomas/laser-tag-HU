@@ -115,6 +115,12 @@ public:
      * \brief Simple function that will return the damage of a weapon by id.
      * @return Damage of the weapon.
      */
-    int getDamageWeaponId(int weaponId) const;
+    int getWeaponDamageById(int weaponId) const;
+
+    /**
+     * \brief Simple function that will return the coodlown of a weapon by id.
+     * @return coodlown of the weapon.
+     */
+    int getWeaponCooldownById(int weaponId) const;
 };
 #endif
