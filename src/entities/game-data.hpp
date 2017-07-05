@@ -42,7 +42,6 @@ public:
     void increaseShotsFired();
 
     int getReceivedHits() const;
-    void increaseReceivedHits();
 
     HitBy getHitByArrFromIndex(int i) const;
     void insertHitBy(int playerId, int weaponId);

@@ -74,28 +74,37 @@ void PlayerTask::start() {
             if (c.get_id() != 0 && c.get_id() != data.getPlayerId()) {
                 hwlib::cout << "hit\n";
                 data.insertHitBy(c.get_id(), c.get_data());
+                if(data.getHealth() <= 0) {
+                    break;
+                }
             }
         } else if (event == gameTimer) {
             data.setTime(data.getTime() - 1);
             if (data.getTime() < 0) {
-
-                if (data.getReceivedHits() == 0) {
-                    hwlib::cout << "No hit information";
-                } else {
-                    for (int i = 0; i < data.getReceivedHits(); i++) {
-                        hwlib::cout << "player id " << data.getHitByArrFromIndex(i).playerId << " with weapon " << data.getHitByArrFromIndex(i).WeaponId << "\n";
-                    }
-                }
-                // print amount of shots fired
-                hwlib::cout << "amount of shots fired by you : " << data.getShotsFired();
-            } else {
-                updateDisplay(true);
+                break;
             }
         }
     }
+    end();
 }
 
 void PlayerTask::end() {
+    display.getWindowOstream() << "Game over.\n";
+    display.getWindowOstream() << "Return to game master.\n";
+    display.getWindowOstream() << "Shoot when connected.\n";
+    display.flush();
+    wait(shoot);
+    for (;;) {
+        hwlib::cout << data.getPlayerId() << "-";
+        hwlib::cout << data.getHealth() << "-";
+        hwlib::cout << data.getShotsFired() << "-";
+        for (int i = 0; i < data.getReceivedHits(); i++) {
+            hwlib::cout << data.getHitByArrFromIndex(i).playerId << "-";
+            hwlib::cout << data.getHitByArrFromIndex(i).WeaponId << "-";
+        }
+        hwlib::cout << data.getReceivedHits() << "-";
+        hwlib::cout << data.getTime() << ";";
+    }
 }
 
 void PlayerTask::updateDisplay(bool alive) {

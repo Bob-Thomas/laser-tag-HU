@@ -5,7 +5,7 @@
 #include "../interfaces/i-controller.hpp"
 #include "../entities/game-data.hpp"
 #include "../application-logic/command.hpp"
-#include "../boundaries/ir-controller.hpp"
+#include "../boundaries/ir-send-controller.hpp"
 #include "../boundaries/display-controller.hpp"
 #include "stdlib.h"
 class MasterTask : public rtos::task<>, public IController {

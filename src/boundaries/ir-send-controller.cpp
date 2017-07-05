@@ -5,7 +5,7 @@
  * \license     See LICENSE
  */
 
-#include "ir-controller.hpp"
+#include "ir-send-controller.hpp"
 
 IrController::IrController(hwlib::target::d2_36kHz & diode):
     diode(diode)

@@ -52,12 +52,8 @@ int GameData::getReceivedHits() const {
     return receivedHits;
 }
 
-void GameData::increaseReceivedHits() {
-    receivedHits++;
-}
-
 void GameData::insertHitBy(int playerId, int weaponId) {
-    hitByArr[receivedHits] = {playerId, weaponId};
+    hitByArr[receivedHits++] = {playerId, weaponId};
     health -= arsenal.getWeaponById(weaponId).getDamage();
 }
 

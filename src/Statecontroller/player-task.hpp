@@ -5,7 +5,7 @@
 #include "../interfaces/i-controller.hpp"
 #include "../boundaries/sound-controller.hpp"
 #include "../boundaries/display-controller.hpp"
-#include "../boundaries/ir-controller.hpp"
+#include "../boundaries/ir-send-controller.hpp"
 #include "../entities/game-data.hpp"
 #include "../application-logic/command.hpp"
 class PlayerTask : public rtos::task<>, public IController {
