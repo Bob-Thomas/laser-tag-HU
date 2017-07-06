@@ -1,3 +1,9 @@
+/**
+ * \file      master-task.cpp
+ * \author    Bob Thomas
+ * \author    Robbie Valkenburg
+ * \copyright Copyright (c) 2017, Lasertak
+ */
 #include "master-task.hpp"
 constexpr const char *const MasterTask::menuItems[];
 
@@ -69,68 +75,47 @@ void MasterTask::keypadPressed(char c) {
 }
 
 void MasterTask::receiveData() {
-    //TODO serial reads from the weapons
-    Arsenal arsenal;
-    display.getWindowOstream() << "\fReceive hits \n Press C to start \n Press # to cancel \n Press B to \n Show winner";
-    display.flush();
-    char d;
-    int count = 0;
-    int index = -1;
-    PlayerScore &score = scores[0];
     while (true) {
+        display.getWindowOstream() << "\fReceive hits \n Press C to start \n Press # to cancel \n Press B to \n Show winner";
+        display.flush();
         wait(keypadInput);
         char key = keypadInput.read();
         if (key == 'C') {
             display.getWindowOstream() << "\fRECEIVING STARTED";
             display.flush();
+            received.clear();
+            Command c;
             wait(received);
-            Command c = received.read();
-            if (c.get_id() == 0 && c.get_data() == 0) {
-                irTransmitter.send(Command(0, 0).get_encoded());
-                display.getWindowOstream() << "\f\n\n\n  RECEIVING DATA..";
-                display.flush();
+
+            c = received.read();
+            irTransmitter.send(Command(0, 0).get_encoded());
+            display.getWindowOstream() << "\f\n\n\nRECEIVING DATA..";
+            display.flush();
+
+            irTransmitter.send(Command(0, 0).get_encoded());
+            received.clear();
+
+            wait(received);
+            c = received.read();
+            scoreData.add(c.get_id(), 0, c.get_data());
+            hwlib::cout << "received ID" << c.get_id() << "is alive: " << (((bool)c.get_data()) ? "YES" : "NO") << "\n";
+            while (true) {
                 wait(received);
                 c = received.read();
-                index = getScoreIndexById(c.get_id());
-                if (index != -1) {
-                    score = scores[index];
-                } else {
-                    scores[count] = {false, d, 0};
-                    score = scores[count];
-                    count++;
+                if (c.get_encoded() == Command(0, 1).get_encoded()) {
+                    break;
                 }
-                score.is_alive = c.get_data();
-                while(true) {
-                    wait(received);
-                    index = -1;
-                    c = received.read();
-                    if(c.get_encoded() == Command(0,0)) {
-                        break;
-                    }
-                    index = getScoreIndexById(c.get_id());
-                    if (index != -1) {
-                        score = scores[index];
-                    } else {
-                        scores[count] = {false, d, 0};
-                        score = scores[count];
-                        count++;
-                    }
-                    score.score = score.score + arsenal.getWeaponById(c.get_data()).getDamage();
-                    display.getWindowOstream() << "\f\n\n\n  RECEIVING DATA...";
-                    display.flush();
-                }
-                display.getWindowOstream() << "\fCOMPLETED";
+                scoreData.add(c.get_id(), c.get_data());
+                display.getWindowOstream() << "\f\n\n\nRECEIVING DATA...";
                 display.flush();
-                sleep(3*rtos::s);
-                break;
             }
+            display.getWindowOstream() << "\fCOMPLETED";
+            display.flush();
+            sleep(3 * rtos::s);
+            break;
         }
         if (key == 'B') {
-            for (int i = 0; i < 32; i++) {
-                if (scores[i].playerId != 0) {
-                    hwlib::cout << "PLAYER -" << scores[i].playerId << " : " << scores[i].score << "\n";
-                }
-            }
+            scoreData.printScores();
         }
         if (key == '#') {
             break;
@@ -276,13 +261,4 @@ void MasterTask::registerPlayer() {
             break;
         }
     }
-}
-
-int MasterTask::getScoreIndexById(int id) {
-    for (int i = 0; i < 32; i++) {
-        if (scores[i].playerId == id) {
-            return i;
-        }
-    }
-    return -1;
 }

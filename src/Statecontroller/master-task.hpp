@@ -1,5 +1,5 @@
 /**
- * \file      arsenal.hpp
+ * \file      master-task.cpp
  * \author    Bob Thomas
  * \author    Robbie Valkenburg
  * \brief     class that will run the application task for game leader/master.
@@ -11,17 +11,10 @@
 #include "rtos.hpp"
 #include "../interfaces/i-controller.hpp"
 #include "../entities/game-data.hpp"
+#include "../entities/score-data.hpp"
 #include "../application-logic/command.hpp"
 #include "../boundaries/ir-send-controller.hpp"
 #include "../boundaries/display-controller.hpp"
-#include "stdlib.h"
-
-struct {
-    bool is_alive = false;
-    int playerId = 0;
-    int score = 0;
-} typedef PlayerScore;
-
 
 class MasterTask : public rtos::task<>, public IController {
 private:
@@ -47,13 +40,13 @@ private:
     /// Channel that gets filled by keypad inputs
     rtos::channel<char, 1> keypadInput;
     /// Channel that gets filled by the received ir commmands
-    rtos::channel<Command,1> received;
+    rtos::channel<Command, 1> received;
     /// Custom command the master can use
     uint16_t customCommand = 0;
     /// Gamedata to save the gametime and whatnot
     GameData gameData;
-    /// Scores of the players
-    PlayerScore scores[32];
+    /// Entity to save scores and print them
+    ScoreData scoreData;
     /// Rtos main function that runs the task
     void main();
     /// function that uses the keypad and ir to register players
@@ -70,9 +63,6 @@ private:
 
     /// function that sends the saved custom command over ir
     void sendSavedCommand();
-
-    /// function that returns index playerScore from array by playerId
-    int getScoreIndexById(int id);
 public:
     /**
      * Constructor for the MasterTask class
