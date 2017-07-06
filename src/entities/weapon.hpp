@@ -23,7 +23,7 @@ public:
      * \param   Damage that the gun can offer.
      * \param   Cooldown for next shot.
      */
-    Weapon(const char* name, int damage, int cooldownInSeconds);
+    Weapon(const char* name, int damage, int cooldownInMilliSeconds);
 
     /*
      * @return The name of the gun.

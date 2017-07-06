@@ -6,7 +6,7 @@
 
 #include "weapon.hpp"
 
-Weapon::Weapon(const char *name, int damage, int cooldownInSeconds) : name(name), damage(damage), cooldownInMilliSeconds(cooldownInSeconds) {
+Weapon::Weapon(const char *name, int damage, int cooldownInMilliSeconds) : name(name), damage(damage), cooldownInMilliSeconds(cooldownInMilliSeconds) {
 
 }
 

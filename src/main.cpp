@@ -7,8 +7,9 @@
 #include "./boundaries/sound-controller.hpp"
 #include "./stateController/player-task.hpp"
 #include "./stateController/master-task.hpp"
-
+#include "entities/arsenal.hpp"
 int main() {
+
     WDT->WDT_MR = WDT_MR_WDDIS;
     // oled
     namespace target = hwlib::target;

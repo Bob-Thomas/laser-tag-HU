@@ -31,6 +31,11 @@ private:
     rtos::channel<Command, 1> received;
     /// Clock for handling the game time.
     rtos::clock gameTimer;
+
+    rtos::timer gunCooldown;
+    rtos::timer hitCooldown;
+    bool canShoot = true;
+    bool canBeHit = true;
     /// Update function for the display.
     void updateDisplay(bool alive);
     /// The RTOS task for executing the main function.

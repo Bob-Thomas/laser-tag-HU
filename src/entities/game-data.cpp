@@ -57,6 +57,13 @@ void GameData::insertHitBy(int playerId, int weaponId) {
     health -= arsenal.getWeaponById(weaponId).getDamage();
 }
 
+int GameData::getWeaponDamageById(int weaponid) const {
+    return arsenal.getWeaponById(weaponId).getDamage();
+}
+int GameData::getWeaponCooldownById(int weaponid) const {
+    return arsenal.getWeaponById(weaponId).getCooldownInMilliSeconds();
+}
+
 HitBy GameData::getHitByArrFromIndex(int i) const {
     return hitByArr[i];
 }
