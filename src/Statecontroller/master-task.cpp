@@ -64,14 +64,12 @@ void MasterTask::main() {
         display.flush();
     }
 }
-void MasterTask::commandReceived(Command c) {
-    hwlib::cout << c.get_id() << " | " << c.get_data() << "\n";
-    received.clear();
-    received.write(c);
-}
 
-void MasterTask::keypadPressed(char c) {
-    keypadInput.write(c);
+rtos::channel<Command, 1>* MasterTask::getReceivedChannel(){
+    return &received;
+}
+rtos::channel<char, 1>* MasterTask::getKeypadChannel() {
+    return &keypadInput;
 }
 
 void MasterTask::receiveData() {

@@ -15,7 +15,7 @@ void KeypadController::main() {
     for(;;) {
         sleep(pollTime);
         if(keypad.char_available()) {
-            controller->keypadPressed(keypad.getc());
+            controller->getKeypadChannel()->write(keypad.getc());
         }
     }
 }

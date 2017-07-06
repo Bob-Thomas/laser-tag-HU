@@ -20,7 +20,7 @@ void IrReceiveController::main() {
             hwlib::wait_ms(3);
             auto signal2 = getData();
             if (signal == signal2) {
-                controller->commandReceived(Command(signal));
+                controller->getReceivedChannel()->write(Command(signal));
             }
         }
         hwlib::wait_us(400);

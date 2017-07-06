@@ -71,17 +71,15 @@ public:
      */
     MasterTask(DisplayController &display, IrController &irTransmitter);
     /**
-     * \brief function that writes keypad input into it's channel
+     * \brief function that return the keypad channel
      * Overload of the pure virtual function in IController
-     * \param c key that has bene pressed on the keypad
      */
-    void keypadPressed(char c);
+    rtos::channel<char, 1>* getKeypadChannel();
     /**
-     * \brief function that writes the received command over ir into it's channel
+     * \brief function that returns the received channel
      * Overload of the pure virtual function in IController
-     * \param c command that has been received by the IrReceiveController
      */
-    void commandReceived(Command c);
+    rtos::channel<Command, 1>* getReceivedChannel();
     /**
      * \brief overload of the pure virtual function it has no use for this task
      */

@@ -57,13 +57,16 @@ public:
     void end();
     /// Interface function for the button pressed. Will set the shoot flag.
     void buttonPressed();
-    /*
-     * \brief Interface function when a command is received from the infrared receiver.
-     * \param Command class that will contain the data that is received.
+    /**
+     * \brief function that returns the received channel
+     * Overload of the pure virtual function in IController
      */
-    void commandReceived(Command c);
-    /// Interface function for keypad that is required to declare.
-    void keypadPressed(char c) {}
+    rtos::channel<Command, 1>* getReceivedChannel();
+
+    /**
+     * Overload for the pure virtual function not being used
+     */
+    rtos::channel<char, 1>* getKeypadChannel() {return nullptr;}
 
 };
 #endif // PLAYER_TASK_HPP

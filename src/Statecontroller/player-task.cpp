@@ -1,6 +1,14 @@
 #include "player-task.hpp"
 
-PlayerTask::PlayerTask(SoundController &sound, DisplayController &display, IrController &irTransmitter) : task("Player task"), sound(sound), display(display), irTransmitter(irTransmitter), shoot(this, "shoot-flag"), received(this, "received channel"), gameTimer(this, 600000000000, "gametimer"), gunCooldown(this, "cooldown-timer"), hitCooldown(this, "hit-cooldown-timer") {
+PlayerTask::PlayerTask(SoundController &sound, DisplayController &display, IrController &irTransmitter) : task("Player task"),
+                                                                                                          sound(sound),
+                                                                                                          display(display),
+                                                                                                          irTransmitter(irTransmitter),
+                                                                                                          shoot(this, "shoot-flag"),
+                                                                                                          received(this, "received channel"),
+                                                                                                          gameTimer(this, 600000000000, "gametimer"),
+                                                                                                          gunCooldown(this, "cooldown-timer"),
+                                                                                                          hitCooldown(this, "hit-cooldown-timer") {
 }
 
 void PlayerTask::main() {
@@ -43,7 +51,7 @@ void PlayerTask::init() {
     wait(shoot);
     wait(received);
     c = received.read();
-    while(c.get_id() != 0 && c.get_data() != 0) {
+    while (c.get_id() != 0 && c.get_data() != 0) {
         wait(received);
         c = received.read();
     }
@@ -70,29 +78,29 @@ void PlayerTask::start() {
     for (;;) {
         auto event = wait(shoot + received + gameTimer + gunCooldown + hitCooldown);
         if (event == shoot) {
-            if(canShoot) {
+            if (canShoot) {
                 //hwlib::cout << "pew\n";
                 sound.play_shoot();
                 irTransmitter.send(Command(data.getPlayerId(), data.getWeaponId()).get_encoded());
                 data.increaseShotsFired();
                 canShoot = false;
-                gunCooldown.set(data.getWeaponCooldownById(data.getWeaponId())*rtos::ms);
+                gunCooldown.set(data.getWeaponCooldownById(data.getWeaponId()) * rtos::ms);
             } else {
                 //hwlib::cout << "in cooldown here.. \n";
             }
         } else if (event == received) {
-            if(canBeHit) {
+            if (canBeHit) {
                 //hwlib::cout << "received command\n";
                 Command c = received.read();
                 if (c.get_id() != 0 && c.get_id() != data.getPlayerId()) {
                     //hwlib::cout << "hit\n";
                     data.insertHitBy(c.get_id(), c.get_data());
-                    hitCooldown.set(10*rtos::ms);
+                    hitCooldown.set(10 * rtos::ms);
                     canBeHit = false;
                     display.getWindowOstream() << "\fHP :" << data.getHealth() << "\n";
                     display.getWindowOstream() << "Time left :" << data.getTime() << "\n";
                     display.flush();
-                    if(data.getHealth() <= 0) {
+                    if (data.getHealth() <= 0) {
                         break;
                     }
                 }
@@ -119,7 +127,7 @@ void PlayerTask::end() {
     display.getWindowOstream() << "Return to game master.\n";
     display.getWindowOstream() << "Shoot when connected.\n";
     display.flush();
-    while(true) {
+    while (true) {
         Command c;
         while (c.get_encoded() != Command(0, 0).get_encoded()) {
             auto event = wait(shoot + received);
@@ -131,11 +139,12 @@ void PlayerTask::end() {
             }
         }
         hwlib::wait_ms(500);
-        irTransmitter.send(Command(data.getPlayerId(), (bool) data.getHealth()).get_encoded());
+        irTransmitter.send(Command(data.getPlayerId(), (bool)data.getHealth()).get_encoded());
         hwlib::wait_ms(500);
         for (int i = 0; i < data.getReceivedHits(); i++) {
             irTransmitter.send(Command(data.getHitByArrFromIndex(i).playerId,
-                                       data.getHitByArrFromIndex(i).weaponId).get_encoded());
+                                       data.getHitByArrFromIndex(i).weaponId)
+                                   .get_encoded());
             hwlib::wait_ms(500);
         }
         irTransmitter.send(Command(0, 1).get_encoded());
@@ -149,8 +158,6 @@ void PlayerTask::buttonPressed() {
     shoot.set();
 }
 
-void PlayerTask::commandReceived(Command c) {
-    ////hwlib::cout << c.get_id() << " | " << c.get_data() << "\n";
-    received.clear();
-    received.write(c);
+rtos::channel<Command, 1> *PlayerTask::getReceivedChannel() {
+    return &received;
 }
