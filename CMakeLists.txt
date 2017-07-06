@@ -19,4 +19,8 @@ add_executable(lightboard
         src/stateController/controller.hpp
         src/stateController/init-game-controller.cpp
         src/stateController/init-game-controller.hpp
-        src/boundaries/ir-controller.cpp)
+        src/boundaries/ir-send-controller.hpp
+        src/boundaries/ir-send-controller.cpp
+        src/boundaries/display-controller.hpp
+        src/boundaries/display-controller.cpp
+        )

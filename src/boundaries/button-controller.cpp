@@ -19,6 +19,6 @@ void ButtonController::main() {
         } else if (!button.get() && clicked) {
             clicked = false;
         }
-
+        wait(clock);
     }
 }
