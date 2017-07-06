@@ -43,6 +43,10 @@ void PlayerTask::init() {
     wait(shoot);
     wait(received);
     c = received.read();
+    while(c.get_id() != 0 && c.get_data() != 0) {
+        wait(received);
+        c = received.read();
+    }
     if (c.get_id() == 0 && c.get_data() == 0) {
         display.getWindowOstream() << "\f\n\n  STARTING";
         display.flush();
@@ -67,28 +71,28 @@ void PlayerTask::start() {
         auto event = wait(shoot + received + gameTimer + gunCooldown + hitCooldown);
         if (event == shoot) {
             if(canShoot) {
-                hwlib::cout << "pew\n";
+                //hwlib::cout << "pew\n";
                 sound.play_shoot();
                 irTransmitter.send(Command(data.getPlayerId(), data.getWeaponId()).get_encoded());
                 data.increaseShotsFired();
                 canShoot = false;
                 gunCooldown.set(data.getWeaponCooldownById(data.getWeaponId())*rtos::ms);
             } else {
-                hwlib::cout << "in cooldown here.. \n";
+                //hwlib::cout << "in cooldown here.. \n";
             }
         } else if (event == received) {
             if(canBeHit) {
-                hwlib::cout << "received command\n";
+                //hwlib::cout << "received command\n";
                 Command c = received.read();
                 if (c.get_id() != 0 && c.get_id() != data.getPlayerId()) {
-                    hwlib::cout << "hit\n";
+                    //hwlib::cout << "hit\n";
                     data.insertHitBy(c.get_id(), c.get_data());
+                    hitCooldown.set(10*rtos::ms);
+                    canBeHit = false;
                     if(data.getHealth() <= 0) {
                         break;
                     }
                 }
-                hitCooldown.set(10*rtos::ms);
-                canBeHit = false;
             }
         } else if (event == gameTimer) {
             data.setTime(data.getTime() - 1);
@@ -113,16 +117,27 @@ void PlayerTask::end() {
     display.getWindowOstream() << "Return to game master.\n";
     display.getWindowOstream() << "Shoot when connected.\n";
     display.flush();
-    wait(shoot);
-    irTransmitter.send(Command(0,0).get_encoded());
-    wait(received);
-    irTransmitter.send(Command(data.getPlayerId(),(bool) data.getHealth()).get_encoded());
-    hwlib::wait_ms(50);
-    for (int i = 0; i < data.getReceivedHits(); i++) {
-        irTransmitter.send(Command(data.getHitByArrFromIndex(i).playerId, data.getHitByArrFromIndex(i).WeaponId).get_encoded());
-        hwlib::wait_ms(50);
+    while(true) {
+        Command c;
+        while (c.get_encoded() != Command(0, 0).get_encoded()) {
+            auto event = wait(shoot + received);
+            if (event == shoot) {
+                irTransmitter.send(Command(0, 1).get_encoded());
+            }
+            if (event == received) {
+                c = received.read();
+            }
+        }
+        hwlib::wait_ms(500);
+        irTransmitter.send(Command(data.getPlayerId(), (bool) data.getHealth()).get_encoded());
+        hwlib::wait_ms(500);
+        for (int i = 0; i < data.getReceivedHits(); i++) {
+            irTransmitter.send(Command(data.getHitByArrFromIndex(i).playerId,
+                                       data.getHitByArrFromIndex(i).WeaponId).get_encoded());
+            hwlib::wait_ms(500);
+        }
+        irTransmitter.send(Command(0, 1).get_encoded());
     }
-    irTransmitter.send(Command(0,0).get_encoded());
 }
 
 void PlayerTask::updateDisplay(bool alive) {
@@ -133,7 +148,7 @@ void PlayerTask::buttonPressed() {
 }
 
 void PlayerTask::commandReceived(Command c) {
-    hwlib::cout << c.get_id() << " | " << c.get_data() << "\n";
+    ////hwlib::cout << c.get_id() << " | " << c.get_data() << "\n";
     received.clear();
     received.write(c);
 }
