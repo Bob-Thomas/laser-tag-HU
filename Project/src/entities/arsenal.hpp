@@ -10,6 +10,9 @@
 
 #include "weapon.hpp"
 
+/**
+ * \brief simple class to store our weapon arsenal
+ */
 class Arsenal {
 private:
     /// A list of Weapons that the player can use during game.

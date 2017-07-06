@@ -15,6 +15,11 @@
 #include "../boundaries/ir-send-controller.hpp"
 #include "../entities/game-data.hpp"
 #include "../application-logic/command.hpp"
+
+/**
+ * \brief task that runs the client system
+ * This class runs the client system and listens on button presses, keypad inputs, ir signals.
+ */
 class PlayerTask : public rtos::task<>, public IController {
 private:
     /// The current game data.
@@ -23,8 +28,8 @@ private:
     SoundController &sound;
     /// Display controller class for writing on the oled.
     DisplayController &display;
-    /// IRController for sending information with infrared.
-    IrController &irTransmitter;
+    /// IrSendController for sending information with infrared.
+    IrSendController &irTransmitter;
     /// Flag for checking when the player has shot.
     rtos::flag shoot;
     /// A channel that can be used to write and read the received commands.
@@ -45,9 +50,9 @@ public:
      * \brief The constructor for the PlayerTask.
      * \param SoundController for handling sounds.
      * \param DisplayController for writing on oled.
-     * \param IrController for sending data with infrared.
+     * \param IrSendController for sending data with infrared.
      */
-    PlayerTask(SoundController& sound, DisplayController& display, IrController &irTransmitter);
+    PlayerTask(SoundController& sound, DisplayController& display, IrSendController &irTransmitter);
 
     /// Function that will be used for init process with game master.
     void init();

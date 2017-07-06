@@ -16,6 +16,11 @@
 #include "../boundaries/ir-send-controller.hpp"
 #include "../boundaries/display-controller.hpp"
 
+/**
+ * \brief task that runs our game master system
+ * This task is responsible for registering players and sending a start signal or custom signals.
+ * It can also read in the player scores after a game has ended and show the winner of the match
+ */
 class MasterTask : public rtos::task<>, public IController {
 private:
     /**
@@ -36,7 +41,7 @@ private:
     /// Refererence to the display controller
     DisplayController &display;
     /// Reference to the transmitter controller
-    IrController &irTransmitter;
+    IrSendController &irTransmitter;
     /// Channel that gets filled by keypad inputs
     rtos::channel<char, 1> keypadInput;
     /// Channel that gets filled by the received ir commmands
@@ -67,9 +72,9 @@ public:
     /**
      * Constructor for the MasterTask class
      * \param[in] display Reference to an existing DisplayController
-     * \param[in] irTransmitter Reference to an existing IrController
+     * \param[in] irTransmitter Reference to an existing IrSendController
      */
-    MasterTask(DisplayController &display, IrController &irTransmitter);
+    MasterTask(DisplayController &display, IrSendController &irTransmitter);
     /**
      * \brief function that writes keypad input into it's channel
      * Overload of the pure virtual function in IController

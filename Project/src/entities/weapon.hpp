@@ -8,6 +8,9 @@
 #ifndef LASER_WEAPON_HPP
 #define LASER_WEAPON_HPP
 
+/**
+ * \brief class that holds weapon information id,damage,cooldown
+ */
 class Weapon {
 private:
     /// Name of the weapon.

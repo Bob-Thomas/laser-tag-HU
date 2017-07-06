@@ -30,7 +30,7 @@ int main() {
 
     auto sound_controller = SoundController(lsp);
     auto display_controller = DisplayController(oled);
-    auto irTransmitter = IrController(irTransmitterPin);
+    auto irTransmitter = IrSendController(irTransmitterPin);
     #if GAMEMODE == PLAYER
     auto gameTask = PlayerTask(sound_controller, display_controller, irTransmitter);
     #elif GAMEMODE == LEADER

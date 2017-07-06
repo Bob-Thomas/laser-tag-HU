@@ -11,7 +11,10 @@
 
 #include "hwlib.hpp"
 
-class IrController {
+/**
+ * \brief class that controls the sending ir commands by setting the ir led
+ */
+class IrSendController {
 private:
     hwlib::target::d2_36kHz & diode;
 
@@ -32,7 +35,7 @@ public:
      * \param diode The IR-LED
      *
      */
-    IrController(hwlib::target::d2_36kHz & diode);
+    IrSendController(hwlib::target::d2_36kHz & diode);
 
     /**
      * \brief Send a bitstream

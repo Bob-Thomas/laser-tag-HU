@@ -16,6 +16,9 @@ struct {
     int weaponId;
 } typedef HitBy;
 
+/**
+ * \brief Class that stores the player data and game time
+ */
 class GameData {
 private:
     /// Player id for the client.
@@ -42,12 +45,12 @@ public:
 
     /**
     * \brief Function to set player id when received from the game master.
-    * \param Id that will be set to the player.
+    * \param id id that will be set to the player.
     */
     void setPlayerId(int id);
 
     /**
-     * @return Player id.
+     * \return Player id.
      */
     int getPlayerId() const;
 
@@ -57,32 +60,34 @@ public:
     void setWeaponId(int id);
 
     /**
-     * @return Weapon id.
+     * \return Weapon id.
      */
     int getWeaponId() const;
 
     /*
      * \brief Set the game duration in minutes.
+     * \param[in] time amount of time you want to set
      */
     void setTime(int time);
 
     /**
-     * @return The time left in minutes of game.
+     * \return The time left in minutes of game.
      */
     int getTime() const;
 
     /*
      * \brief Setter function for health.
+     * \param[in] hp amount of health you want to set
      */
     void setHealth(int hp);
 
     /**
-     * @return Current health left of the player.
+     * \return Current health left of the player.
      */
     int getHealth() const;
 
     /**
-     * @return Amount of shots that are fired by player.
+     * \return Amount of shots that are fired by player.
      */
     int getShotsFired() const;
 
@@ -92,34 +97,36 @@ public:
     void increaseShotsFired();
 
     /**
-     * @return Amount of incoming hits that are received by player.
+     * \return Amount of incoming hits that are received by player.
      */
     int getReceivedHits() const;
 
     /**
      * \brief Get a single received hit information.
-     * \param The index of the list that will determine the structure to return.
-     * @return A structure that contains each received player id and weapon id.
+     * \param i The index of the list that will determine the structure to return.
+     * \return A structure that contains each received player id and weapon id.
      */
     HitBy getHitByArrFromIndex(int i) const;
 
     /**
     * \brief Store the player id and weapon id in to the list of received hits.
-    * \param Received player id.
-    * \param Received weapon id.
-    * @return Damage of the weapon.
+    * \param playerId Received player id.
+    * \param weaponId Received weapon id.
+    * \return Damage of the weapon.
     */
     void insertHitBy(int playerId, int weaponId);
 
     /**
      * \brief Simple function that will return the damage of a weapon by id.
-     * @return Damage of the weapon.
+     * \param[in] weaponId id of the weapon you want to get the damage for
+     * \return Damage of the weapon.
      */
     int getWeaponDamageById(int weaponId) const;
 
     /**
      * \brief Simple function that will return the coodlown of a weapon by id.
-     * @return coodlown of the weapon.
+     * \param[in] weaponId id of the weapon you want to get the cooldown for     *
+     * \return coodlown of the weapon.
      */
     int getWeaponCooldownById(int weaponId) const;
 };

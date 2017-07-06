@@ -42,7 +42,7 @@ public:
      * \brief add a score to the list
      * \param[in] id id of the player you want to add score for
      * \param[in] weapon id of the weapon the player
-     * \param[in] if the player is alive or not
+     * \param[in] alive if the player is alive or not
      */
     void add(int id, int weapon, bool alive = false);
     /**

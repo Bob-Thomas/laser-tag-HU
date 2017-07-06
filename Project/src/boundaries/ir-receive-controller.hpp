@@ -12,6 +12,12 @@
 #include "../application-logic/command.hpp"
 #include "../interfaces/i-controller.hpp"
 
+/**
+ * \brief task that polls our ir receiver and listens for our protocol
+ * This task polls our ir receiver every 400us.
+ * If it finds a signal it will keep trying load in more signals and evenutally construct a command if it's conform our protocol
+ * it expects the command to be sent twice with a 3ms delay
+ */
 class IrReceiveController : public rtos::task<> {
 private:
     /// Pin the ir data output is on
