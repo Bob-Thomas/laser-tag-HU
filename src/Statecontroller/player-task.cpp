@@ -133,7 +133,7 @@ void PlayerTask::end() {
         hwlib::wait_ms(500);
         for (int i = 0; i < data.getReceivedHits(); i++) {
             irTransmitter.send(Command(data.getHitByArrFromIndex(i).playerId,
-                                       data.getHitByArrFromIndex(i).WeaponId).get_encoded());
+                                       data.getHitByArrFromIndex(i).weaponId).get_encoded());
             hwlib::wait_ms(500);
         }
         irTransmitter.send(Command(0, 1).get_encoded());
