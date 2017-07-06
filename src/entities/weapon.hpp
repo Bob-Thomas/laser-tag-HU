@@ -13,9 +13,9 @@ private:
     /// Name of the weapon.
     const char* name;
     /// Amount of damage that the weapon will do.
-    int damage;
+    int damage = 0;
     /// Cooldown in milliseconds for the gun to shoot again.
-    int cooldownInMilliSeconds;
+    int cooldownInMilliSeconds = 0;
 public:
     /*
      * \brief Constructor for class.
