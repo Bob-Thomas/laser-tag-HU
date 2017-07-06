@@ -50,17 +50,17 @@ void PlayerTask::init() {
     if (c.get_id() == 0 && c.get_data() == 0) {
         display.getWindowOstream() << "\f\n\n  STARTING";
         display.flush();
-        display.getWindowOstream() << "\f\n\n 5s";
+        display.getWindowOstream() << "\f\n\n      5s";
         display.flush();
-        display.getWindowOstream() << "\f\n\n 4s";
+        display.getWindowOstream() << "\f\n\n      4s";
         display.flush();
-        display.getWindowOstream() << "\f\n\n 3s";
+        display.getWindowOstream() << "\f\n\n      3s";
         display.flush();
-        display.getWindowOstream() << "\f\n\n 2s";
+        display.getWindowOstream() << "\f\n\n      2s";
         display.flush();
-        display.getWindowOstream() << "\f\n\n 1s";
+        display.getWindowOstream() << "\f\n\n      1s";
         display.flush();
-        display.getWindowOstream() << "\f\n\n 0s";
+        display.getWindowOstream() << "\f\n\n      0s";
         display.flush();
     }
 }
@@ -89,6 +89,9 @@ void PlayerTask::start() {
                     data.insertHitBy(c.get_id(), c.get_data());
                     hitCooldown.set(10*rtos::ms);
                     canBeHit = false;
+                    display.getWindowOstream() << "\fHP :" << data.getHealth() << "\n";
+                    display.getWindowOstream() << "Time left :" << data.getTime() << "\n";
+                    display.flush();
                     if(data.getHealth() <= 0) {
                         break;
                     }
@@ -96,6 +99,9 @@ void PlayerTask::start() {
             }
         } else if (event == gameTimer) {
             data.setTime(data.getTime() - 1);
+            display.getWindowOstream() << "\fHP :" << data.getHealth() << "\n";
+            display.getWindowOstream() << "Time left :" << data.getTime() << "\n";
+            display.flush();
             if (data.getTime() <= 0) {
                 break;
             }
@@ -104,10 +110,6 @@ void PlayerTask::start() {
         } else if (event == hitCooldown) {
             canBeHit = true;
         }
-
-        display.getWindowOstream() << "\fHP :" << data.getHealth() << "\n";
-        display.getWindowOstream() << "Time left :" << data.getTime() << "\n";
-        display.flush();
     }
     end();
 }
