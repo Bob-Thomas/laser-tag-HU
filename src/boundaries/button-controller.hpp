@@ -1,5 +1,5 @@
 /**
- * \file      button_controller.hpp
+ * \file      button-controller.hpp
  * \brief     Task that listens for a button press and notifies a controller
  * \author    Bob Thomas
  * \copyright Copyright (c) 2017, Lasertak
