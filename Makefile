@@ -10,7 +10,7 @@
 
 # settings for Arduino Due projects
 TARGET            ?= arduino_due
-SERIAL_PORT       ?= COM5
+SERIAL_PORT       ?= COM3
 CONSOLE_BAUDRATE  ?= 38400
 STACK_SIZE        ?= 81920
 HEAP              ?= BMPTK
@@ -57,6 +57,9 @@ SOURCES 		  += src/entities/arsenal.cpp
 HEADERS 		  += src/entities/weapon.hpp
 SOURCES 		  += src/entities/weapon.cpp
 
+HEADERS 		  += src/entities/score-data.hpp
+SOURCES 		  += src/entities/score-data.cpp
+
 ## States
 HEADERS           +=  src/Statecontroller/player-task.hpp
 SOURCES           +=  src/Statecontroller/player-task.cpp
@@ -77,7 +80,7 @@ SOURCES           += rtos.cpp
 
 DEFINES           += -DPlAYER=2
 DEFINES           += -DLEADER=1
-DEFINES           += -DGAMEMODE=PLAYER
+DEFINES           += -DGAMEMODE=LEADER
 OS ?= $(shell uname)
 
 player:
