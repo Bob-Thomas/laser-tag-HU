@@ -6,6 +6,7 @@
 
 #include "display-controller.hpp"
 DisplayController::DisplayController(hwlib::glcd_oled_buffered &oled ):
+        task(3, "display task"),
         oled(oled),
         stream(oled, font),
         flushFlag(this, "set flush flag")

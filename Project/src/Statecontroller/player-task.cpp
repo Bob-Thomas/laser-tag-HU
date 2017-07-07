@@ -1,6 +1,6 @@
 #include "player-task.hpp"
 
-PlayerTask::PlayerTask(SoundController &sound, DisplayController &display, IrSendController &irTransmitter) : task("Player task"), sound(sound), display(display), irTransmitter(irTransmitter), shoot(this, "shoot-flag"), received(this, "received channel"), gameTimer(this, 600000000000, "gametimer"), gunCooldown(this, "cooldown-timer"), hitCooldown(this, "hit-cooldown-timer") {
+PlayerTask::PlayerTask(SoundController &sound, DisplayController &display, IrSendController &irTransmitter) : task(4, "Player task"), sound(sound), display(display), irTransmitter(irTransmitter), shoot(this, "shoot-flag"), received(this, "received channel"), gameTimer(this, 600000000000, "gametimer"), gunCooldown(this, "cooldown-timer"), hitCooldown(this, "hit-cooldown-timer") {
 }
 
 void PlayerTask::main() {
@@ -62,6 +62,10 @@ void PlayerTask::init() {
         display.flush();
         display.getWindowOstream() << "\f\n\n      0s";
         display.flush();
+        display.getWindowOstream() << "\fHP :" << data.getHealth() << "\n";
+        display.getWindowOstream() << "Weapon :\n  " << data.getWeaponNameById(data.getWeaponId()) << "\n";
+        display.getWindowOstream() << "Time left :" << data.getTime() << "\n";
+        display.flush();
     }
 }
 
@@ -90,6 +94,7 @@ void PlayerTask::start() {
                     hitCooldown.set(10*rtos::ms);
                     canBeHit = false;
                     display.getWindowOstream() << "\fHP :" << data.getHealth() << "\n";
+                    display.getWindowOstream() << "Weapon :\n  " << data.getWeaponNameById(data.getWeaponId()) << "\n";
                     display.getWindowOstream() << "Time left :" << data.getTime() << "\n";
                     display.flush();
                     if(data.getHealth() <= 0) {
@@ -100,6 +105,7 @@ void PlayerTask::start() {
         } else if (event == gameTimer) {
             data.setTime(data.getTime() - 1);
             display.getWindowOstream() << "\fHP :" << data.getHealth() << "\n";
+            display.getWindowOstream() << "Weapon :\n  " << data.getWeaponNameById(data.getWeaponId()) << "\n";
             display.getWindowOstream() << "Time left :" << data.getTime() << "\n";
             display.flush();
             if (data.getTime() <= 0) {

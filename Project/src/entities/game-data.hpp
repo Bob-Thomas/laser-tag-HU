@@ -129,5 +129,12 @@ public:
      * \return coodlown of the weapon.
      */
     int getWeaponCooldownById(int weaponId) const;
+
+    /**
+     * \brief Simple function that will return the name of a weapon by id.
+     * \param[in] weaponId id of the weapon you want to get the cooldown for     *
+     * \return coodlown of the weapon.
+     */
+    const char* getWeaponNameById(int weaponId) const;
 };
 #endif

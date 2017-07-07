@@ -7,7 +7,7 @@
 #include "sound-controller.hpp"
 
 SoundController::SoundController(hwlib::pin_out &lsp):
-        task("sound controller"),
+        task(5, "sound controller"),
         lsp(lsp),
         play_sound(this, "play-sound"),
         sounds(this)

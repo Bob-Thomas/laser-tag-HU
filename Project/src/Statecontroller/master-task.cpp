@@ -8,7 +8,7 @@
 constexpr const char *const MasterTask::menuItems[];
 
 MasterTask::MasterTask(DisplayController &display, IrSendController &irTransmitter)
-    : task("Master task"), display(display), irTransmitter(irTransmitter),
+    : task(4, "Master task"), display(display), irTransmitter(irTransmitter),
       keypadInput(this, "keypad channel"), received(this, "received channel") {
 }
 

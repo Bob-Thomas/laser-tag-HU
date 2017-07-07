@@ -17,18 +17,14 @@ void ScoreData::empty() {
 }
 
 void ScoreData::add(int id, int weapon, bool alive) {
-    PlayerScore& score = scores[31];
-    for(auto player : scores) {
-        if(player.id == id) {
-            score = player;
-        }
-    }
-    if(score.id == 0) {
+    int index = getIndex(id);
+    if(index == -1) {
         scores[filledScores] = {alive, id, 0};
-        score = scores[filledScores];
         filledScores++;
+    } else {
+        scores[index].alive = alive;
     }
-    score.score+= arsenal.getWeaponById(weapon).getDamage();
+    scores[index].score += arsenal.getWeaponById(weapon).getDamage();
 }
 
 void ScoreData::printScores() {
@@ -40,6 +36,15 @@ void ScoreData::printScores() {
             hwlib::cout << player.id << "     " << player.score << "      " << ((player.alive) ? "YES" : "NO") << "\n";
         }
     }
+}
+
+int ScoreData::getIndex(int id) {
+    for(int i = 0; i < 32; i++) {
+        if(scores[i].id == id) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 PlayerScore ScoreData::getWinner() {

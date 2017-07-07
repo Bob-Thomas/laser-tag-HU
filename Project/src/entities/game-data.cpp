@@ -64,6 +64,10 @@ int GameData::getWeaponCooldownById(int weaponid) const {
     return arsenal.getWeaponById(weaponId).getCooldownInMilliSeconds();
 }
 
+const char* GameData::getWeaponNameById(int weaponid) const {
+    return arsenal.getWeaponById(weaponId).getName();
+}
+
 HitBy GameData::getHitByArrFromIndex(int i) const {
     return hitByArr[i];
 }

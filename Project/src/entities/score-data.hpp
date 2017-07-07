@@ -29,6 +29,8 @@ private:
   int filledScores = 0;
   /// Access to the weapons
   Arsenal arsenal;
+
+  int getIndex(int id);
 public:
     /**
      * \brief constructor for the Score class

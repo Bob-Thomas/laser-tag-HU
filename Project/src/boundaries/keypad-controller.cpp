@@ -6,7 +6,7 @@
 #include "keypad-controller.hpp"
 
 KeypadController::KeypadController(hwlib::keypad<16> &keypad, IController *controller) :
-    task("keypad task"),
+    task(2, "keypad task"),
     keypad(keypad),
     controller(controller)
 {}
